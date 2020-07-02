@@ -80,8 +80,8 @@ int main() {
 
     glm::vec3 gridPositions[200];
     for (int i=0; i < 100; ++i) {
-        gridPositions[i] = glm::vec3(0.0, 0.0f, i-50.0f);
-        gridPositions[i + 100] = glm::vec3(i - 50.0f, 0.0f, 0.0f);
+        gridPositions[i] = glm::vec3(0.0, 0.0f, i-49.5f);
+        gridPositions[i + 100] = glm::vec3(i-49.5f, 0.0f, 0.0f);
     }
 
 
@@ -159,7 +159,7 @@ int main() {
             // calculate the model matrix for each object and pass it to shader before drawing
             glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
             model = glm::translate(model, gridPositions[i]);
-            model = glm::scale(model, glm::vec3(50.0f, 50.0f, 50.0f));
+            model = glm::scale(model, glm::vec3(49.5f, 0.0f, 49.5f));
             genericShader.setMat4("model", model);
 
             glDrawElements(GL_LINES, 2, GL_UNSIGNED_INT, (void*)(2*i*sizeof(float)));
