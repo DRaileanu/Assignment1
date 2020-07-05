@@ -9,6 +9,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "camera.h"
+#include "Cube.h"
 
 #include <iostream>
 
@@ -56,11 +57,11 @@ int main() {
     programInit();
 
     // build and compile shader program
-    
+    Shader shader("shaders/vertex_shader.glsl", "shaders/fragment_shader.glsl");
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
-    
+    Cube cube;
 
 
     // load and create a texture 
@@ -98,19 +99,22 @@ int main() {
        
 
         // activate shader
-        
+        shader.use();
 
         // pass projection matrix to shader (note that in this case it could change every frame)
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-        //shader.setMat4("projection", projection); //use whatever shader we want
+        shader.setMat4("projection", projection); //use whatever shader we want
 
         // camera/view transformation
         glm::mat4 view = camera.GetViewMatrix();
-        //shader.setMat4("view", view);
+        shader.setMat4("view", view);
 
 
         // render objects
-       
+        glm::mat4 model = glm::mat4(1.0f);
+        
+        shader.setMat4("model", model);
+        cube.draw();
 
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
