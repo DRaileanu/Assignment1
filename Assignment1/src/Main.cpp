@@ -61,6 +61,37 @@ int main() {
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
+    
+    glm::vec3 cubePositions[] = {
+    //Letter = H
+
+    //left bar
+    glm::vec3(0.0f,  0.0f, 0.0f),
+    
+    //middle
+    glm::vec3(0.0f, 0.0f, 0.0f),
+    //right bar
+    glm::vec3(0.0f,  0.0f, 0.0f),
+    
+
+
+    //Number = 5
+    
+    glm::vec3(0.0f,  0.0f, 0.0f),
+    
+    
+    glm::vec3(0.0f,  0.0f, 0.0f),
+    
+
+    glm::vec3(0.0f,  0.0f, 0.0f),
+    
+
+    glm::vec3(0.0f,  0.0f, 0.0f),
+ 
+    glm::vec3(0.0f,  0.0f, 0.0f),
+    
+
+    };
     Cube cube;
 
 
@@ -109,12 +140,63 @@ int main() {
         glm::mat4 view = camera.GetViewMatrix();
         shader.setMat4("view", view);
 
+        for (unsigned int i = 0; i < 8; i++)
+        {
+            // calculate the model matrix for each object and pass it to shader before drawing
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, cubePositions[i]);
+            if (i == 0) {
+                model = glm::scale(model, glm::vec3(1.0, 5.0, 1.0));
+            }
+            
+            if (i == 1) {
+                model = glm::scale(model, glm::vec3(2.0, 1.0, 1.0));
+                model = glm::translate(model, glm::vec3(0.75f, 0.0f, 0.0f));
+                
+                
+                //model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0, 1.0, 0.0));
+            }
+            if (i == 2) {
+                model = glm::scale(model, glm::vec3(1.0, 5.0, 1.0));
+                model = glm::translate(model, glm::vec3(3.0f, 0.0f, 0.0f));
+                
+                
+            }
+            if (i == 3) {
+                model = glm::scale(model, glm::vec3(3.0, 1.0, 1.0));
+                model = glm::translate(model, glm::vec3(2.0f, 2.0f, 0.0f));
+                
+                
+            }
+            if (i == 4) {
+                model = glm::scale(model, glm::vec3(3.0, 1.0, 1.0));
+                model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f));
+                
+                
+            }
+            if (i == 5) {
+                model = glm::scale(model, glm::vec3(3.0, 1.0, 1.0));
+                model = glm::translate(model, glm::vec3(2.0f, -2.0f, 0.0f));
+                
+                
+            }
+            
+            if (i == 6) {
+                model = glm::translate(model, glm::vec3(5.0f, 1.0f, 0.0f));
+            }
+            if (i == 7) {
+                model = glm::translate(model, glm::vec3(7.0f, -1.0f, 0.0f));
+            }
 
-        // render objects
-        glm::mat4 model = glm::mat4(1.0f);
+
+            
+            shader.setMat4("model", model);
+
+            cube.draw();
+
+        }
         
-        shader.setMat4("model", model);
-        cube.draw();
+        
 
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
