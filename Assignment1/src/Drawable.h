@@ -5,10 +5,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
 
-class Mesh {
+class Drawable {
 public:
-	Mesh();
-	~Mesh();
+	Drawable();
+	~Drawable();
 
 	virtual void draw();
 

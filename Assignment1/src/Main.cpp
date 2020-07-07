@@ -77,7 +77,7 @@ int main() {
     model2->setTransform(glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, 0.0f, 0.0f)));
     root->addChild(model2);
 
-
+    
     
     // load and create a texture 
     // -------------------------
@@ -254,7 +254,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 
 
 void drawNode(SceneNode* node, Shader* shader) {
-    if (node->getMesh()) {
+    if (node->getDrawable()) {
         glm::mat4 transform = node->getWorldTransform();
         shader->setMat4("model", transform);
         node->draw();

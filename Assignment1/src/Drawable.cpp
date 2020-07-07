@@ -1,20 +1,20 @@
-#include "Mesh.h"
+#include "Drawable.h"
 
 
-Mesh::Mesh() {
+Drawable::Drawable() {
 	glGenVertexArrays(1, &VAO);
 	VBO = CBO = EBO = 0;
 	type = GL_TRIANGLES;
 }
 
-Mesh::~Mesh() {
+Drawable::~Drawable() {
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &CBO);
 	glDeleteBuffers(1, &EBO);
 }
 
-void Mesh::setupBufferData() {
+void Drawable::setupBufferData() {
 	glBindVertexArray(VAO);
 	//positions
 	if (vertices.empty()) { return; }//try removing and see if works with empty mesh
@@ -41,7 +41,7 @@ void Mesh::setupBufferData() {
 	glBindVertexArray(0);
 }
 
-void Mesh::draw() {
+void Drawable::draw() {
 	glBindVertexArray(VAO);
 	if (EBO) {
 		glDrawElements(type, indices.size(), GL_UNSIGNED_INT, 0);

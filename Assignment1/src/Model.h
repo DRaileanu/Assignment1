@@ -15,6 +15,6 @@ private:
 	void createN();
 	void create1();
 
-	Mesh* cube;
+	Drawable* cube;
 };
 

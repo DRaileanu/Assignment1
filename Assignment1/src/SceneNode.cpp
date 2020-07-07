@@ -1,7 +1,7 @@
 #include "SceneNode.h"
 
-SceneNode::SceneNode(Mesh* mesh) {
-	this->mesh = mesh;
+SceneNode::SceneNode(Drawable* drawable) {
+	this->drawable = drawable;
 	parent = NULL;
 	localTransform = glm::mat4(1.0f);
 }
@@ -23,8 +23,8 @@ void SceneNode::addChild(SceneNode* child) {
 }
 
 void SceneNode::draw() {
-	if (mesh) {
-		mesh->draw();
+	if (drawable) {
+		drawable->draw();
 	}
 }
 

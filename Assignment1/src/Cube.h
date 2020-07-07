@@ -6,11 +6,11 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "Mesh.h"
+#include "Drawable.h"
 #include <string>
 #include <vector>
 
-class Cube : public Mesh {
+class Cube : public Drawable {
 public:
 	Cube();
 	~Cube();
