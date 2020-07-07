@@ -72,7 +72,7 @@ int main() {
     SceneNode* dan = new SceneNode;
     dan->setTransform(glm::translate(glm::mat4(1.0f), glm::vec3(-20.0f, 0.0f, -30.0f)));
     root->addChild(dan);
-
+ 
     Model* model1 = new Model('N');
     model1->setTransform(glm::translate(glm::mat4(1.0f), glm::vec3(-2.5f, 0.0f, 0.0f)));
     dan->addChild(model1);
@@ -80,6 +80,18 @@ int main() {
     Model* model2 = new Model('1');
     model2->setTransform(glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, 0.0f, 0.0f)));
     dan->addChild(model2);
+
+    SceneNode* Moh = new SceneNode;
+    Moh->setTransform(glm::translate(glm::mat4(1.0f), glm::vec3(-20.0f, 0.0f, -30.0f)));
+    root->addChild(Moh);
+
+    Model* model3 = new Model('H');
+    model3->setTransform(glm::translate(glm::mat4(1.0f), glm::vec3(10.5f, 0.0f, 0.0f)));
+    Moh->addChild(model3);
+
+    Model* model4 = new Model('5');
+    model4->setTransform(glm::translate(glm::mat4(1.0f), glm::vec3(15.5f, 0.0f, 0.0f)));
+    Moh->addChild(model4);
 
     
     

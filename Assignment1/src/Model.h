@@ -14,6 +14,8 @@ public:
 private:
 	void createN();
 	void create1();
+	void createH();
+	void create5();
 
 	Drawable* cube;
 };
