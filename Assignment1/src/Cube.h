@@ -6,23 +6,12 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-
+#include "Mesh.h"
 #include <string>
 #include <vector>
 
-class Cube {
-
+class Cube : public Mesh {
 public:
 	Cube();
-
-	void draw();
-
-private:
-	void setupCube();
-
-	std::vector<glm::vec3> positions;
-	std::vector<glm::vec3> colors;
-	std::vector<unsigned int> indices;
-
-	unsigned int VAO, VBO, CBO, EBO;
+	~Cube();
 };

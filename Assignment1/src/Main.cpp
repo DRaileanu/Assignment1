@@ -63,7 +63,7 @@ int main() {
     // ------------------------------------------------------------------
     Cube cube;
 
-
+    
     // load and create a texture 
     // -------------------------
     
@@ -110,11 +110,21 @@ int main() {
         shader.setMat4("view", view);
 
 
+
         // render objects
-        glm::mat4 model = glm::mat4(1.0f);
-        
+        glm::mat4 model;
+        model = glm::mat4(1.0f);
         shader.setMat4("model", model);
         cube.draw();
+
+
+
+        //model = glm::mat4(1.0f);
+        //model = glm::translate(model, glm::vec3(-1.5, 0.0, 0.0));
+        //model = glm::scale(model, glm::vec3(1.0, 5.0, 1.0));
+        ////model = scale * trans *  model;
+        //shader.setMat4("model", model);
+        //cube.draw();
 
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)

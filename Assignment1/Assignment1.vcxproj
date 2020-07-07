@@ -159,6 +159,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Cube.cpp" />
+    <ClCompile Include="src\Mesh.cpp" />
+    <ClCompile Include="src\SceneNode.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\stb_image.cpp" />
@@ -173,6 +175,8 @@
     <Image Include="textures\kappa.png" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Mesh.h" />
+    <ClInclude Include="src\SceneNode.h" />
     <ClInclude Include="src\Cube.h" />
     <ClInclude Include="src\camera.h" />
   </ItemGroup>
