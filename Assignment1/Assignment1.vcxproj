@@ -78,6 +78,8 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)</OutDir>
     <IntDir>$(SolutionDir)bin\intermediate\$(Platform)\$(Configuration)</IntDir>
+    <IncludePath>C:\Users\muher\Desktop\371_Project\Assignment1\Dependencies\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\muher\Desktop\371_Project\Assignment1\Dependencies\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>

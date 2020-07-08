@@ -17,6 +17,8 @@ private:
 	void createH();
 	void create5();
 
+	void create2();
+
 	Drawable* cube;
 };
 
