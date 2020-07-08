@@ -106,6 +106,19 @@ int main() {
     model6->setTransform(glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, 0.0f, 0.0f)));
     muher->addChild(model6);
 
+    SceneNode* radhep = new SceneNode;
+    radhep->setTransform(glm::translate(glm::mat4(1.0f), glm::vec3(-20.0f, -10.0f, -30.0f)));
+    root->addChild(radhep);
+
+    Model* model7 = new Model('D');
+    model7->setTransform(glm::translate(glm::mat4(1.0f), glm::vec3(10.5f, 0.0f, 0.0f)));
+    radhep->addChild(model7);
+
+    Model* model8 = new Model('3');
+    model8->setTransform(glm::translate(glm::mat4(1.0f), glm::vec3(15.5f, 0.0f, 0.0f)));
+    radhep->addChild(model8);
+    
+
     
     // load and create a texture 
     // -------------------------
