@@ -12,6 +12,7 @@
 #include "SceneNode.h"
 #include "Cube.h"
 #include "Model.h"
+#include "Grid.h"
 
 #include <iostream>
 
@@ -30,7 +31,7 @@ const unsigned int SCR_HEIGHT = 600;
 GLFWwindow* window;
 
 // camera
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 0.0f, 0.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -66,12 +67,19 @@ int main() {
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
-        
+      
+
     SceneNode* root = new SceneNode;
 
+    SceneNode* grid= new SceneNode(new Grid);
+    root->addChild(grid);
+
     SceneNode* dan = new SceneNode;
-    dan->setTransform(glm::translate(glm::mat4(1.0f), glm::vec3(-20.0f, 0.0f, -30.0f)));
-    root->addChild(dan);
+    dan->setTransform(
+        glm::translate(glm::mat4(1.0f), glm::vec3(-46.5f, 2.5f, -47.5f)) *
+        glm::rotate(glm::mat4(1.0f), glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f))
+        );
+    grid->addChild(dan);
  
     Model* model1 = new Model('N');
     model1->setTransform(glm::translate(glm::mat4(1.0f), glm::vec3(-2.5f, 0.0f, 0.0f)));
@@ -81,22 +89,28 @@ int main() {
     model2->setTransform(glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, 0.0f, 0.0f)));
     dan->addChild(model2);
 
+
     SceneNode* Moh = new SceneNode;
-    Moh->setTransform(glm::translate(glm::mat4(1.0f), glm::vec3(-20.0f, 0.0f, -30.0f)));
-    root->addChild(Moh);
+    Moh->setTransform(glm::translate(glm::mat4(1.0f), glm::vec3(46.5f, 2.5f, -46.5f)) *
+        glm::rotate(glm::mat4(1.0f), glm::radians(-45.0f), glm::vec3(0.0f, 1.0f, 0.0f))
+        );
+    grid->addChild(Moh);
 
     Model* model3 = new Model('H');
-    model3->setTransform(glm::translate(glm::mat4(1.0f), glm::vec3(10.5f, 0.0f, 0.0f)));
+    model3->setTransform(glm::translate(glm::mat4(1.0f), glm::vec3(-2.5f, 0.0f, 0.0f)));
     Moh->addChild(model3);
 
     Model* model4 = new Model('5');
-    model4->setTransform(glm::translate(glm::mat4(1.0f), glm::vec3(15.5f, 0.0f, 0.0f)));
+    model4->setTransform(glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, 0.0f, 0.0f)));
     Moh->addChild(model4);
 
     
     SceneNode* muher = new SceneNode;
-    muher->setTransform(glm::translate(glm::mat4(1.0f), glm::vec3(-20.0f, -10.0f, -30.0f)));
-    root->addChild(muher);
+    muher->setTransform(
+        glm::translate(glm::mat4(1.0f), glm::vec3(-46.5f, 2.5f, 46.5f)) *
+        glm::rotate(glm::mat4(1.0f), glm::radians(135.0f), glm::vec3(0.0f, 1.0f, 0.0f))
+        );
+    grid->addChild(muher);
 
     Model* model5 = new Model('H');
     model5->setTransform(glm::translate(glm::mat4(1.0f), glm::vec3(-2.5f, 0.0f, 0.0f)));
@@ -106,28 +120,35 @@ int main() {
     model6->setTransform(glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, 0.0f, 0.0f)));
     muher->addChild(model6);
 
+
     SceneNode* radhep = new SceneNode;
-    radhep->setTransform(glm::translate(glm::mat4(1.0f), glm::vec3(-20.0f, -10.0f, -30.0f)));
-    root->addChild(radhep);
+    radhep->setTransform(glm::translate(glm::mat4(1.0f), glm::vec3(46.5f, 2.5f, 47.0f)) *
+        glm::rotate(glm::mat4(1.0f), glm::radians(-135.0f), glm::vec3(0.0f, 1.0f, 0.0f))
+        );
+    grid->addChild(radhep);
 
     Model* model7 = new Model('D');
-    model7->setTransform(glm::translate(glm::mat4(1.0f), glm::vec3(10.5f, 0.0f, 0.0f)));
+    model7->setTransform(glm::translate(glm::mat4(1.0f), glm::vec3(-2.5f, 0.0f, 0.0f)));
     radhep->addChild(model7);
 
     Model* model8 = new Model('3');
-    model8->setTransform(glm::translate(glm::mat4(1.0f), glm::vec3(15.5f, 0.0f, 0.0f)));
+    model8->setTransform(glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, 0.0f, 0.0f)));
     radhep->addChild(model8);
 
+
     SceneNode* mohd = new SceneNode;
-    mohd->setTransform(glm::translate(glm::mat4(1.0f), glm::vec3(-8.0f, -5.0f, -30.0f)));
-    root->addChild(mohd);
+    mohd->setTransform(
+        glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 2.5f, 0.0f)) *
+        glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f))
+        );
+    grid->addChild(mohd);
 
     Model* model9 = new Model('H');
-    model9->setTransform(glm::translate(glm::mat4(1.0f), glm::vec3(10.5f, 0.0f, 0.0f)));
+    model9->setTransform(glm::translate(glm::mat4(1.0f), glm::vec3(-2.5f, 0.0f, 0.0f)));
     mohd->addChild(model9);
 
     Model* model10 = new Model('1');
-    model10->setTransform(glm::translate(glm::mat4(1.0f), glm::vec3(15.5f, 0.0f, 0.0f)));
+    model10->setTransform(glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, 0.0f, 0.0f)));
     mohd->addChild(model10);
     
 
