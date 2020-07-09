@@ -1,13 +1,11 @@
 #pragma once
-#include "SceneNode.h"
+#include "Drawable.h"
 #include <vector>
 
-class Grid : public SceneNode {
+class Grid : public Drawable {
 public:
-	Grid();
+	Grid(int size = 100);
 	~Grid();
 
-private:
-	void createGrid();
 };
 
