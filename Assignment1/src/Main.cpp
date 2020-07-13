@@ -353,10 +353,6 @@ int main() {
         drawNode(root, &shader);
 
 
-        //uncomment during demo to explain world orientation
-        //shader.setMat4("model", glm::mat4(1.0f));
-        //shader.setMat4("world", glm::mat4(1.0f));
-        //ax.draw();
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
