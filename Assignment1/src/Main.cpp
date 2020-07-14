@@ -160,9 +160,6 @@ int main() {
     //default selected node to transform
     SceneNode* selectedNode = mohd;
 
-    //world matrix used to change world orientation
-    glm::mat4 world(1.0f);
-
 
     // render loop
     // -----------
