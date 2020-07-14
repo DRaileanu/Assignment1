@@ -1,3 +1,9 @@
+//---------------------------------------------------------------------------------------------------------------------
+// While the implementation of this class is authentic, the general structure was highly inspired from:
+// JMonkeyEngine Scene Graph for Dummies https://wiki.jmonkeyengine.org/tutorials/scenegraph/assets/fallback/index.html
+// OpenSceneGraph https://codedocs.xyz/openscenegraph/OpenSceneGraph/annotated.html
+//---------------------------------------------------------------------------------------------------------------------
+
 #pragma once
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
