@@ -19,7 +19,6 @@ public:
 	virtual ~SceneNode();
 
 	virtual void draw();
-	virtual void updateLocalTransform();
 	virtual void updateWorldTransform();
 
 	void addChild(SceneNode*);
@@ -29,6 +28,7 @@ public:
 	void setDrawable(Drawable* drawable) { this->drawable = drawable; }
 
 	glm::mat4 getWorldTransform() const { return worldTransform; }
+
 	
 	//used to update localTransform
 	void translate(glm::vec3);
@@ -47,9 +47,12 @@ protected:
 	std::vector<SceneNode*> children;
 
 private:
+	virtual void updateLocalTransform();
+
 	glm::vec3	translation;
 	glm::vec3	rotation;
 	glm::vec3	scaling;
 	glm::mat4	shearing;
+
 };
 

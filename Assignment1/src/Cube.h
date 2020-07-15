@@ -8,7 +8,8 @@
 
 class Cube : public Drawable {
 public:
-	Cube();
+	Cube();//creates cube without colours (black)
+	Cube(glm::vec3 colour);//creates cube given colour
 	~Cube();
 
 };

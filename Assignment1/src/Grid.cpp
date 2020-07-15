@@ -14,7 +14,7 @@ Grid::Grid(int size) {
 
 	colours = std::vector < glm::vec3>(vertices.size());
 	for (unsigned int i = 0; i < colours.size(); ++i) {
-		colours[i] = glm::vec3(0.5f, 0.5f, 0.5f);
+		colours[i] = glm::vec3(0.4f, 0.4f, 0.0f);
 	}
 
 	setupBufferData();

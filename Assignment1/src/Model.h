@@ -8,7 +8,7 @@
 class Model : public SceneNode {
 public:
 	Model() = delete;
-	Model(char);//requires a character to be created
+	Model(char c, glm::vec3 colour);//requires a character and colour to be created
 	~Model();
 
 private:

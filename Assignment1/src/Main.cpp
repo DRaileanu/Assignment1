@@ -100,7 +100,7 @@ int main() {
     SceneNode* letter1Node = new SceneNode;
     letter1Node->translate(glm::vec3(-15.0f, 0.0f, 0.0f));
     nameModels->addChild(letter1Node);
-    Model* letter1 = new Model('R');
+    Model* letter1 = new Model('R', glm::vec3(1.0f, 0.0f, 0.0f));
     letter1->translate(glm::vec3(0.0f, 2.15f, 0.0f));
     letter1Node->addChild(letter1);
 
@@ -108,7 +108,7 @@ int main() {
     SceneNode* letter2Node = new SceneNode;
     letter2Node->translate(glm::vec3(-9.0f, 0.0f, 0.0f));
     nameModels->addChild(letter2Node);
-    Model* letter2 = new Model('A');
+    Model* letter2 = new Model('A', glm::vec3(1.0f, 0.5f, 0.0f));
     letter2->translate(glm::vec3(0.0f, 2.15f, 0.0f));
     letter2Node->addChild(letter2);
 
@@ -116,7 +116,7 @@ int main() {
     SceneNode* letter3Node = new SceneNode;
     letter3Node->translate(glm::vec3(-3.0f, 0.0f, 0.0f));
     nameModels->addChild(letter3Node);
-    Model* letter3 = new Model('I');
+    Model* letter3 = new Model('I', glm::vec3(0.0f, 1.0f, 1.0f));
     letter3->translate(glm::vec3(0.0f, 2.15f, 0.0f));
     letter3Node->addChild(letter3);
 
@@ -124,23 +124,23 @@ int main() {
     SceneNode* letter4Node = new SceneNode;
     letter4Node->translate(glm::vec3(3.0f, 0.0f, 0.0f));
     nameModels->addChild(letter4Node);
-    Model* letter4 = new Model('L');
-    letter4->translate(glm::vec3(0.0f, 2.50f, 0.0f));
+    Model* letter4 = new Model('L', glm::vec3(0.5f, 0.0f, 1.0f));
+    letter4->translate(glm::vec3(0.0f, 2.15f, 0.0f));
     letter4Node->addChild(letter4);
 
 
     SceneNode* letter5Node = new SceneNode;
     letter5Node->translate(glm::vec3(9.0f, 0.0f, 0.0f));
     nameModels->addChild(letter5Node);
-    Model* letter5 = new Model('E');
-    letter5->translate(glm::vec3(0.0f, 2.50f, 0.0f));
+    Model* letter5 = new Model('E', glm::vec3(1.0f, 0.0f, 1.0f));
+    letter5->translate(glm::vec3(0.0f, 2.15f, 0.0f));
     letter5Node->addChild(letter5);
 
 
     SceneNode* letter6Node = new SceneNode;
     letter6Node->translate(glm::vec3(15.0f, 0.0f, 0.0f));
     nameModels->addChild(letter6Node);
-    Model* letter6 = new Model('A');
+    Model* letter6 = new Model('A', glm::vec3(0.0f, 0.5f, 1.0f));
     letter6->translate(glm::vec3(0.0f, 2.15f, 0.0f));
     letter6Node->addChild(letter6);
     
@@ -210,23 +210,27 @@ int main() {
         // select student models to transform
 
 
-
-        //if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
-        //    selectedNode = dan;
-        //}
-        //if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
-        //    selectedNode = moh;
-        //}
-        //if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
-        //    selectedNode = muher;
-        //}
-        //if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) {
-        //    selectedNode = radhep;
-        //}
-        //if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) {
-        //    selectedNode = mohd;
-        //}
-
+        if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS) {
+            selectedNode = nameModels;
+        }
+        if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
+            selectedNode = letter1;
+        }
+        if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
+            selectedNode = letter2;
+        }
+        if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
+            selectedNode = letter3;
+        }
+        if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) {
+            selectedNode = letter4;
+        }
+        if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) {
+            selectedNode = letter5;
+        }
+        if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS) {
+            selectedNode = letter6;
+        }
         //// option to select only letter or digit model for transformations
         //if (selectedNode == dan) {
         //    if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS) {
@@ -318,12 +322,10 @@ int main() {
 
 
 
-
-
         // render
         // ------
         // reset color and clear Depth Buffer Bit
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClearColor(0.65f, 0.65f, 0.65f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // activate shader
@@ -337,6 +339,7 @@ int main() {
         glm::mat4 view = glm::lookAt(cameraPosition, cameraPosition + cameraFront, cameraUp);
         shader.setMat4("view", view);
 
+       
 
         // update and render Scene Graph
         root->updateWorldTransform();

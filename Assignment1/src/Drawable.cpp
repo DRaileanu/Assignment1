@@ -52,4 +52,3 @@ void Drawable::draw() {
 
 	glBindVertexArray(0);
 }
-

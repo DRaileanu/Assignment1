@@ -1,8 +1,8 @@
 #include "Model.h"
 
 
-Model::Model(char c) {
-	cube = new Cube;
+Model::Model(char c, glm::vec3 colour) {
+	cube = new Cube(colour);
 	switch (c) {
 	case 'N': {createN(); }
 			break;
@@ -80,12 +80,12 @@ void Model::createR() {
 
 	node = new SceneNode(cube);
 	node->scale(glm::vec3(1.0f, 0.5f, 0.25f));
-	node->translate(glm::vec3(-0.55f, 2.25f, 0.0f));
+	node->translate(glm::vec3(-0.55f, 1.9f, 0.0f));
 	addChild(node);
 
 	node = new SceneNode(cube);
 	node->scale(glm::vec3(1.0f, 0.5f, 0.25f));
-	node->translate(glm::vec3(0.55f, 2.25f, 0.0f));
+	node->translate(glm::vec3(0.55f, 1.9f, 0.0f));
 	addChild(node);
 
 	node = new SceneNode(cube);
@@ -154,12 +154,12 @@ void Model::createA() {
 
 	node = new SceneNode(cube);
 	node->scale(glm::vec3(1.0f, 0.5f, 0.25f));
-	node->translate(glm::vec3(-0.55f, 2.25f, 0.0f));
+	node->translate(glm::vec3(-0.55f, 1.9f, 0.0f));
 	addChild(node);
 
 	node = new SceneNode(cube);
 	node->scale(glm::vec3(1.0f, 0.5f, 0.25f));
-	node->translate(glm::vec3(0.55f, 2.25f, 0.0f));
+	node->translate(glm::vec3(0.55f, 1.9f, 0.0f));
 	addChild(node);
 
 	node = new SceneNode(cube);
@@ -248,12 +248,12 @@ void Model::createL() {
 
 	node = new SceneNode(cube);
 	node->scale(glm::vec3(1.0f, 0.5f, 0.25f));
-	node->translate(glm::vec3(-0.55f, -2.25f, 0.0f));
+	node->translate(glm::vec3(-0.55f, -1.9f, 0.0f));
 	addChild(node);
 
 	node = new SceneNode(cube);
 	node->scale(glm::vec3(1.0f, 0.5f, 0.25f));
-	node->translate(glm::vec3(0.55f, -2.25f, 0.0f));
+	node->translate(glm::vec3(0.55f, -1.9f, 0.0f));
 	addChild(node);
 
 }
@@ -299,22 +299,22 @@ void Model::createE() {
 
 	node = new SceneNode(cube);
 	node->scale(glm::vec3(1.0f, 0.5f, 0.25f));
-	node->translate(glm::vec3(-0.55f, -2.25f, 0.0f));
+	node->translate(glm::vec3(-0.55f, -1.9f, 0.0f));
 	addChild(node);
 
 	node = new SceneNode(cube);
 	node->scale(glm::vec3(1.0f, 0.5f, 0.25f));
-	node->translate(glm::vec3(0.55f, -2.25f, 0.0f));
+	node->translate(glm::vec3(0.55f, -1.9f, 0.0f));
 	addChild(node);
 
 	node = new SceneNode(cube);
 	node->scale(glm::vec3(1.0f, 0.5f, 0.25f));
-	node->translate(glm::vec3(-0.55f, 2.25f, 0.0f));
+	node->translate(glm::vec3(-0.55f, 1.9f, 0.0f));
 	addChild(node);
 
 	node = new SceneNode(cube);
 	node->scale(glm::vec3(1.0f, 0.5f, 0.25f));
-	node->translate(glm::vec3(0.55f, 2.25f, 0.0f));
+	node->translate(glm::vec3(0.55f, 1.9f, 0.0f));
 	addChild(node);
 }
 
