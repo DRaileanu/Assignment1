@@ -24,6 +24,9 @@ private:
 	//new models added for Quiz1
 	void createR();
 	void createA();
+	void createI();
+	void createL();
+	void createE();
 
 	Drawable* cube;
 };

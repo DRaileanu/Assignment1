@@ -84,97 +84,70 @@ int main() {
 
     SceneNode* grid = new SceneNode(new Grid);
     grid->translate(glm::vec3(0.0f, 0.0f, 0.0f));
-    //root->addChild(grid);
+    root->addChild(grid);
 
-    // student models
     
+
+    //Name Model is parent of all Letter Models
+    //I'm using an additional SceneNode for every Letter Model because the Models are centered around x=y=z=0 in order to allow rotation around their center.
+    //Translating the Letter Model directly above xz plane will work at first, but then when it's scaled, the bottom would go below xz plane. The extra SceneNode allows me to scale and stay on xz plane.
+
     SceneNode* nameModels = new SceneNode;
-    nameModels->translate(glm::vec3(0.0f, 0.0f, 5.0f));
-    root->addChild(nameModels);
-
-    SceneNode* letterRNode = new SceneNode;
-    letterRNode->translate(glm::vec3(0.0f, 0.0f, 0.0f));
-    nameModels->addChild(letterRNode);
+    nameModels->translate(glm::vec3(0.0f, 0.0f, 5.0f));//move all letters at the back
+    grid->addChild(nameModels);
 
 
-    Model* letterR = new Model('R');
-    letterR->translate(glm::vec3(0.0f, 2.4f, 0.0f));
-    letterRNode->addChild(letterR);
+    SceneNode* letter1Node = new SceneNode;
+    letter1Node->translate(glm::vec3(-15.0f, 0.0f, 0.0f));
+    nameModels->addChild(letter1Node);
+    Model* letter1 = new Model('R');
+    letter1->translate(glm::vec3(0.0f, 2.15f, 0.0f));
+    letter1Node->addChild(letter1);
 
     
+    SceneNode* letter2Node = new SceneNode;
+    letter2Node->translate(glm::vec3(-9.0f, 0.0f, 0.0f));
+    nameModels->addChild(letter2Node);
+    Model* letter2 = new Model('A');
+    letter2->translate(glm::vec3(0.0f, 2.15f, 0.0f));
+    letter2Node->addChild(letter2);
+
+
+    SceneNode* letter3Node = new SceneNode;
+    letter3Node->translate(glm::vec3(-3.0f, 0.0f, 0.0f));
+    nameModels->addChild(letter3Node);
+    Model* letter3 = new Model('I');
+    letter3->translate(glm::vec3(0.0f, 2.15f, 0.0f));
+    letter3Node->addChild(letter3);
+
+
+    SceneNode* letter4Node = new SceneNode;
+    letter4Node->translate(glm::vec3(3.0f, 0.0f, 0.0f));
+    nameModels->addChild(letter4Node);
+    Model* letter4 = new Model('L');
+    letter4->translate(glm::vec3(0.0f, 2.50f, 0.0f));
+    letter4Node->addChild(letter4);
+
+
+    SceneNode* letter5Node = new SceneNode;
+    letter5Node->translate(glm::vec3(9.0f, 0.0f, 0.0f));
+    nameModels->addChild(letter5Node);
+    Model* letter5 = new Model('E');
+    letter5->translate(glm::vec3(0.0f, 2.50f, 0.0f));
+    letter5Node->addChild(letter5);
+
+
+    SceneNode* letter6Node = new SceneNode;
+    letter6Node->translate(glm::vec3(15.0f, 0.0f, 0.0f));
+    nameModels->addChild(letter6Node);
+    Model* letter6 = new Model('A');
+    letter6->translate(glm::vec3(0.0f, 2.15f, 0.0f));
+    letter6Node->addChild(letter6);
     
-    /*SceneNode* dan = new SceneNode;
-    dan->scale(glm::vec3(2.0f, 2.0f, 2.0f));
-    dan->translate(glm::vec3(-40.0f, 0.0f, -40.0f));
-    grid->addChild(dan);
-
-    Model* model1 = new Model('N');
-    model1->translate(glm::vec3(-2.5f, 0.0f, 0.0f));
-    dan->addChild(model1);
-
-    Model* model2 = new Model('1');
-    model2->translate(glm::vec3(2.5f, 0.0f, 0.0f));
-    dan->addChild(model2);
-
-
-    SceneNode* moh = new SceneNode;
-    moh->scale(glm::vec3(2.0f, 2.0f, 2.0f));
-    moh->translate(glm::vec3(40.0f, 0.0f, -40.0f));
-    grid->addChild(moh);
-
-    Model* model3 = new Model('H');
-    model3->translate(glm::vec3(-2.5f, 0.0f, 0.0f));
-    moh->addChild(model3);
-
-    Model* model4 = new Model('5');
-    model4->translate(glm::vec3(2.5f, 0.0f, 0.0f));
-    moh->addChild(model4);
-
-
-    SceneNode* muher = new SceneNode;
-    muher->scale(glm::vec3(2.0f, 2.0f, 2.0f));
-    muher->translate(glm::vec3(-40.0f, 0.0f, 40.0f));
-    grid->addChild(muher);
-
-    Model* model5 = new Model('H');
-    model5->translate(glm::vec3(-2.5f, 0.0f, 0.0f));
-    muher->addChild(model5);
-
-    Model* model6 = new Model('2');
-    model6->translate(glm::vec3(2.5f, 0.0f, 0.0f));
-    muher->addChild(model6);
-
-
-    SceneNode* radhep = new SceneNode;
-    radhep->scale(glm::vec3(2.0f, 2.0f, 2.0f));
-    radhep->translate(glm::vec3(40.0f, 0.0f, 40.0f));
-    grid->addChild(radhep);
-
-    Model* model7 = new Model('D');
-    model7->translate(glm::vec3(-2.5f, 0.0f, 0.0f));
-    radhep->addChild(model7);
-
-    Model* model8 = new Model('3');
-    model8->translate(glm::vec3(2.5f, 0.0f, 0.0f));
-    radhep->addChild(model8);
-
-
-    SceneNode* mohd = new SceneNode;
-    mohd->scale(glm::vec3(2.0f, 2.0f, 2.0f));
-    mohd->translate(glm::vec3(0.0f, 0.0f, -5.0f));
-    grid->addChild(mohd);
-
-    Model* model9 = new Model('H');
-    model9->translate(glm::vec3(-2.5f, 0.0f, 0.0f));
-    mohd->addChild(model9);
-
-    Model* model10 = new Model('1');
-    model10->translate(glm::vec3(2.5f, 0.0f, 0.0f));
-    mohd->addChild(model10);*/
 
 
     //default selected node to transform
-    SceneNode* selectedNode = letterRNode;
+    SceneNode* selectedNode = nameModels;
 
 
     // render loop
