@@ -42,7 +42,7 @@ void Renderer::render() {
 
 	// render opaques first
 	glDisable(GL_BLEND);//does it really need to be disabled?
-	glEnable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	for (auto& node : opaqueDrawables) {
 		renderNode(node);
