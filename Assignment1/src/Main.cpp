@@ -43,6 +43,7 @@ double lastY;
 // Functions prototypes
 //----------------------------------------
 
+void ErrorCallback(int, const char* err_str);
 void programInit();
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -375,11 +376,18 @@ int main() {
 // Function definitions
 //----------------------------------------
 
+// for debugging if getting error
+void ErrorCallback(int, const char* err_str)
+{
+    std::cout << "GLFW Error: " << err_str << std::endl;
+}
+
 // initialize glfw and create window, then use glad to load function pointers
 // TODO abstract into window class
 // --------------------------------------------------------------------------
 void programInit() {
     // glfw: initialize and configure
+    glfwSetErrorCallback(ErrorCallback);
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
