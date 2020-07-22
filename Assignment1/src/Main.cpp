@@ -158,12 +158,14 @@ int main() {
 
 
 
-    SceneNode* sphere = new SceneNode(new Sphere);
+    SceneNode* sphere = new SceneNode(new Sphere(10,6));
+    sphere->translate(glm::vec3(0.0f, 10.0f, 0.0f));
     grid->addChild(sphere);
 
 
-    //default selected node to transform
+    ////default selected node to transform
     SceneNode* selectedNode = sphere;
+
 
     //world matrix used to change world orientation
     glm::mat4 world(1.0f);
@@ -337,7 +339,7 @@ int main() {
         }
 
 
-        
+
         // render
         // ------
         renderer->updateScene(root);
