@@ -19,6 +19,7 @@
 #include "AxisLines.h"
 #include "Renderer.h"
 #include "Camera.h"
+#include "Sphere.h"
 
 
 #include <iostream>
@@ -156,11 +157,19 @@ int main() {
     mohd->addChild(model10);
 
 
+
+    SceneNode* sphere = new SceneNode(new Sphere);
+    grid->addChild(sphere);
+
+
     //default selected node to transform
-    SceneNode* selectedNode = mohd;
+    SceneNode* selectedNode = sphere;
 
     //world matrix used to change world orientation
     glm::mat4 world(1.0f);
+
+
+
 
     
     renderer->setRootSceneNode(root);
@@ -264,12 +273,21 @@ int main() {
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
             selectedNode->translate(glm::vec3(5 * dt, 0.0f, 0.0f));
         }
-        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE) {
             selectedNode->translate(glm::vec3(0.0f, 0.0f, -5 * dt));//confirmed with teacher that UP/DOWN meant along z-axis
         }
-        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE) {
             selectedNode->translate(glm::vec3(0.0f, 0.0f, 5 * dt));
         }
+
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+            selectedNode->translate(glm::vec3(0.0f, 5 * dt, 0.0f));//confirmed with teacher that UP/DOWN meant along z-axis
+        }
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+            selectedNode->translate(glm::vec3(0.0f, -5 * dt, 0.0f));
+        }
+
+
         if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
             selectedNode->rotate(glm::vec3(0.0f, 5.0f, 0.0f));//would use with rotaton with respect to dt, but assignment said 5 degrees
         }
@@ -278,19 +296,34 @@ int main() {
         }
 
 
+
         // world orientation transformations
         if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-            root->rotate(glm::vec3(1.0f, 0.0f, 0.0f));
+            mainCamera->ProcessKeyboard(BACKWARD, dt);
         }
         if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-            root->rotate(glm::vec3(-1.0f, 0.0f, 0.0f));
+            mainCamera->ProcessKeyboard(FORWARD, dt);
         }
         if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-            root->rotate(glm::vec3(0.0f, 1.0f, 0.0f));
+            mainCamera->ProcessKeyboard(LEFT, dt);
         }
         if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-            root->rotate(glm::vec3(0.0f, -1.0f, 0.0f));
+            mainCamera->ProcessKeyboard(RIGHT, dt);
         }
+
+        //// world orientation transformations
+        //if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+        //    root->rotate(glm::vec3(1.0f, 0.0f, 0.0f));
+        //}
+        //if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+        //    root->rotate(glm::vec3(-1.0f, 0.0f, 0.0f));
+        //}
+        //if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+        //    root->rotate(glm::vec3(0.0f, 1.0f, 0.0f));
+        //}
+        //if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+        //    root->rotate(glm::vec3(0.0f, -1.0f, 0.0f));
+        //}
         if (glfwGetKey(window, GLFW_KEY_HOME) == GLFW_PRESS) {
             root->setRotation(glm::vec3(0.0f, 0.0f, 0.0f));
             //comment next 2 lines if don't want camera to reset looking at towards -z axis
@@ -304,7 +337,7 @@ int main() {
         }
 
 
-
+        
         // render
         // ------
         renderer->updateScene(root);
@@ -315,7 +348,7 @@ int main() {
         renderer->postRender();
 
 
-        std::cout << dt << std::endl;//for debugging
+        std::cout << '\r' << "dt: " << dt << "\tFPS: " << 1/dt;//for debugging
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
