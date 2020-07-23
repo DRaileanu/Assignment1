@@ -49,7 +49,7 @@ void Model::createN() {
 
 void Model::create1() {
 	SceneNode* node;
-	cube->setTexture(loadTexture("res/container.jpg"));
+	//cube->setTexture(loadTexture("res/container.jpg"));
 	cube->setTransparent(true);
 	node = new SceneNode(cube);
 	node->scale(glm::vec3(1.0f, 5.0f, 1.0f));
