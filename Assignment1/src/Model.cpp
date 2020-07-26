@@ -231,8 +231,6 @@ void Model::createGridSurface() {
 	addChild(node);
 }
 
-
-
 void Model::setColours(glm::vec3 newColour) {
 	cube->setColours(newColour);
 }
