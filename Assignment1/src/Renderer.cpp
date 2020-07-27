@@ -1,16 +1,18 @@
 #include "Renderer.h"
 
 
-Renderer::Renderer(Camera* camera, Shader* genericShader, Shader* blendingShader, Shader* shadowShader) {
+Renderer::Renderer(Camera* camera, Shader* genericShader,  Shader* lightingMaterial, Shader* lightingTexture, Shader* shadowShader) {
 	this->mainCamera = camera;
 	this->genericShader = genericShader;
-	this->blendingShader = blendingShader;
+	this->lightingMaterial = lightingMaterial;
+	this->lightingTexture = lightingTexture;
 	this->shadowShader = shadowShader;
+	shadowCasterLight = NULL;
 
 	polygonMode = GL_TRIANGLES;
 	texRatio = 1.0f;
 	shadowMode = true;
-	
+
 	// configure depthMapFBO
 	// -----------------------
 	glGenFramebuffers(1, &depthMapFBO);
@@ -37,14 +39,31 @@ Renderer::Renderer(Camera* camera, Shader* genericShader, Shader* blendingShader
 	glActiveTexture(GL_TEXTURE7);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubeMap);
 
-	genericShader->use();
-	genericShader->setInt("texture1", 0);
-	genericShader->setInt("depthCubeMap", 7);
+	lightingMaterial->use();
+	lightingMaterial->setInt("depthCubeMap", 7);
+	lightingMaterial->setFloat("far_plane", far_plane);//NOTE: if want to vary far_plane, needs to be inside render(). Putting here to reduce setting uniforms
 
-	blendingShader->use();
-	blendingShader->setInt("texture1", 0);
-	blendingShader->setInt("depthCubeMap", 7);
+	lightingTexture->use();
+	lightingTexture->setInt("texture1", 0);
+	lightingTexture->setInt("depthCubeMap", 7);
+	lightingTexture->setFloat("far_plane", far_plane);
 
+
+
+
+	GLuint materialIndex = glGetUniformBlockIndex(lightingMaterial->ID, "PointLights");
+	glUniformBlockBinding(lightingMaterial->ID, materialIndex, 0);
+
+	GLuint textureIndex = glGetUniformBlockIndex(lightingTexture->ID, "PointLights");
+	glUniformBlockBinding(lightingTexture->ID, textureIndex, 0);
+
+	glGenBuffers(1, &pointLightsUniformBlock);
+	glBindBuffer(GL_UNIFORM_BUFFER, pointLightsUniformBlock);
+	glBufferData(GL_UNIFORM_BUFFER, 64 * MAX_LIGHTS, NULL, GL_STATIC_DRAW);
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+
+	glBindBufferBase(GL_UNIFORM_BUFFER, 0, pointLightsUniformBlock);
 
 
 }
@@ -69,127 +88,125 @@ void Renderer::render() {
 	glm::mat4 VP = projection * view;
 	//camera position for specular lighting calculation in fragment shader
 	glm::vec3 viewPos = mainCamera->Position;
-	
-	float near_plane = 0.1f;
-	float far_plane = 100.0f;
 
-	
+
+	//NOTE: checking only for shadowCasterLight can result in case where light was set but was removed from Scene Graph
+	//solution: std::find to see if its inside lights vector. Leaving like this for now since curious what sort of bugs can I get
+	if (shadowMode && shadowCasterLight) {
+
+		//TODO for now only PointLight implementation of shadows is made. Add others if needed later
+		if (shadowCasterLight->getType() == LightType::PointLight) {
+			glm::vec3 lightPos = shadowCasterLight->getWorldTransform()[3];//light position relative to which shadows are created
+			//create depthCubeMap transformation matrics
+			glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT, near_plane, far_plane);
+			std::vector<glm::mat4> shadowTransforms;
+			shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+			shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+			shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
+			shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)));
+			shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+			shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+
+			//render scene to depthCubeMap
+			//----------------------------
+			glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);//switch viewport since depthMap might use different resolution (SHADOW_WIDTH * SHADOW_HEIGHT)
+			glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);//bind and clear depthMap frame buffer
+			glClear(GL_DEPTH_BUFFER_BIT);
+			//configure shadowShader
+			shadowShader->use();
+			for (unsigned int i = 0; i < 6; ++i) {
+				shadowShader->setMat4("shadowMatrices[" + std::to_string(i) + "]", shadowTransforms[i]);
+			}
+			shadowShader->setFloat("far_plane", far_plane);//needed to clamp distance from Frag_Depth and lightPos to [0,1] in shadow.fs
+			shadowShader->setVec3("lightPos", lightPos);
+
+			//render scene into depthCubeMap
+			glEnable(GL_CULL_FACE);
+			for (auto& node : opaqueTexDraws) {
+				shadowRenderNode(node);
+			}
+			for (auto& node : opaqueMaterialDraws) {
+				shadowRenderNode(node);
+			}
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);//for safety
+			glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+
+			//provide shaders that implement shadows position of shadowCastingLight
+			lightingMaterial->use();
+			lightingMaterial->setVec3("shadowCastingLightPos", lightPos);
+			lightingTexture->use();
+			lightingTexture->setVec3("shadowCastingLightPos", lightPos);
+		}
+		//TODO if DirLight & if SpotLight
+
+	}
+
+
+
+
+
+	//configure rest of shaders
+	//---------------------
+
+	glBindBuffer(GL_UNIFORM_BUFFER, pointLightsUniformBlock);
+	for (int i = 0; i < lights.size(); ++i) {
+		LightProperties prop = lights[i]->getProperties();
+		glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::vec4) * 4 * i, sizeof(glm::vec3), &lights[i]->getWorldTransform()[3]);
+		for (int j = 0; j < 3; ++j) {
+			glBufferSubData(GL_UNIFORM_BUFFER, (sizeof(glm::vec4) * 4 * i) + (sizeof(glm::vec4) * (j + 1)), sizeof(glm::vec3), &prop.ambient + j);
+		}
+	}
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+
+
 	genericShader->use();
 	genericShader->setMat4("VP", VP);
-	genericShader->setVec3("viewPos", viewPos);
-	genericShader->setFloat("far_plane", far_plane);
-	genericShader->setBool("shadows", shadowMode);
 
-	for (int i = 0; i < lights.size(); ++i) {
-		switch (lights[i]->getType()) {
-		case LightType::PointLight: {
-				genericShader->setVec3("pointLights[" + std::to_string(i) + "].position", lights[i]->getWorldTransform()[3]);
-				LightProperties properties = lights[i]->getProperties();
-				genericShader->setVec3("pointLights[" + std::to_string(i) + "].ambient", properties.ambient);
-				genericShader->setVec3("pointLights[" + std::to_string(i) + "].diffuse", properties.diffuse);
-				genericShader->setVec3("pointLights[" + std::to_string(i) + "].specular", properties.specular);
-				break;
-		}
-		//TODO add cases for DirLight and SpotLight
 
-		default : {}
-		}
+	lightingMaterial->use();
+	lightingMaterial->setMat4("VP", VP);
+	lightingMaterial->setVec3("viewPos", viewPos);
+	lightingMaterial->setBool("shadows", shadowMode);
+
+
+
+	lightingTexture->use();
+	lightingTexture->setMat4("VP", VP);
+	lightingTexture->setVec3("viewPos", viewPos);
+	lightingTexture->setBool("shadows", shadowMode);
+
+
+
+
+
+
+	//std::sort(opaqueTexDraws.begin(), opaqueTexDraws.end(), [](DrawNode* a, DrawNode* b) {return a->getTexture() < b->getTexture(); });
+
+	
+
+
+	
+	// render opaques before transparents
+	glDisable(GL_BLEND);//needs to be disabled just in case Drawable has alpha <1.0 but DrawNode sets transparency to false
+	glEnable(GL_CULL_FACE);//optimization
+
+
+	genericShader->use();
+	for (auto& node : genericDraws) {
+		renderNode(node, genericShader);
 	}
 
-	blendingShader->use();
-	blendingShader->setMat4("VP", VP);
-	blendingShader->setVec3("viewPos", viewPos);
-	blendingShader->setFloat("far_plane", far_plane);
-	blendingShader->setBool("shadows", shadowMode);
-
-
-	for (int i = 0; i < lights.size(); ++i) {
-		switch (lights[i]->getType()) {
-		case LightType::PointLight: {
-				blendingShader->setVec3("pointLights[" + std::to_string(i) + "].position", lights[i]->getWorldTransform()[3]);
-				LightProperties properties = lights[i]->getProperties();
-				blendingShader->setVec3("pointLights[" + std::to_string(i) + "].ambient", properties.ambient);
-				blendingShader->setVec3("pointLights[" + std::to_string(i) + "].diffuse", properties.diffuse);
-				blendingShader->setVec3("pointLights[" + std::to_string(i) + "].specular", properties.specular);
-				break;
-		}
-
-
-		default: {}
-		}
+	lightingTexture->use();
+	lightingTexture->setFloat("texRatio", texRatio);
+	for (auto& node : opaqueTexDraws) {
+		glActiveTexture(GL_TEXTURE0); 
+		glBindTexture(GL_TEXTURE_2D, node->getTexture());
+		renderNode(node, lightingTexture);
 	}
-
-	if (shadowMode) {
-		shadowShader->use();
-		shadowShader->setFloat("far_plane", far_plane);
-
-		//create depthCubeMap transformation matrics
-		glm::vec3 lightPos = lights[0]->getWorldTransform()[3];
-		//float near_plane = 1.0f;
-		//float far_plane = 25.0f;
-		glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT, near_plane, far_plane);
-		std::vector<glm::mat4> shadowTransforms;
-		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
-		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
-		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
-		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)));
-		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
-		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
-
-		//render scene to depthCubeMap
-		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-		glClear(GL_DEPTH_BUFFER_BIT);
-		for (unsigned int i = 0; i < 6; ++i) {
-			shadowShader->setMat4("shadowMatrices[" + std::to_string(i) + "]", shadowTransforms[i]);
-		}
-
-		shadowShader->setVec3("lightPos", lightPos);
-
-		glEnable(GL_CULL_FACE);
-		for (auto& node : opaqueDrawables) {
-			shadowRenderNode(node);
-		}
-
-
-		shadowTransforms.clear();
-
-		/*lightPos = lights[1]->getWorldTransform()[3];
-		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
-		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
-		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
-		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)));
-		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
-		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
-
-
-		for (unsigned int i = 0; i < 6; ++i) {
-			shadowShader->setMat4("shadowMatrices[" + std::to_string(i) + "]", shadowTransforms[i]);
-		}
-
-		shadowShader->setVec3("lightPos", lightPos);
-
-
-		glEnable(GL_CULL_FACE);
-		for (auto& node : opaqueDrawables) {
-			shadowRenderNode(node);
-		}*/
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
-
-	}
-
-
-
-
-
-
-
-	// render opaques first
-	glDisable(GL_BLEND);//does it really need to be disabled?
-	glEnable(GL_CULL_FACE);
-	for (auto& node : opaqueDrawables) {
-		renderNode(node);
+	lightingMaterial->use();
+	for (auto& node : opaqueMaterialDraws) {
+		renderNode(node, lightingMaterial);
 	}
 
 	// render transparents, back to front
@@ -197,7 +214,7 @@ void Renderer::render() {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDepthMask(GL_FALSE);
 
-	
+
 	// both methods seem to work the same, consider if theres really a difference since I could swear there was one when i first came up with it
 
 	//method 1
@@ -209,13 +226,16 @@ void Renderer::render() {
 
 	//method 2
 	//--------
+	genericShader->use();
 	glCullFace(GL_FRONT);
-	for (auto iter = transparentDrawables.rbegin(); iter != transparentDrawables.rend(); ++iter) {
-		renderNode(iter->second);
+	for (auto iter = transparentDraws.rbegin(); iter != transparentDraws.rend(); ++iter) {
+		genericShader->setFloat("transparency", iter->second->getTransparency());
+		renderNode(iter->second, genericShader);
 	}
 	glCullFace(GL_BACK);
-	for (auto iter = transparentDrawables.rbegin(); iter != transparentDrawables.rend(); ++iter) {
-		renderNode(iter->second);
+	for (auto iter = transparentDraws.rbegin(); iter != transparentDraws.rend(); ++iter) {
+		genericShader->setFloat("transparency", iter->second->getTransparency());
+		renderNode(iter->second, genericShader);
 	}
 
 
@@ -229,35 +249,44 @@ void Renderer::updateScene() {
 	}
 	updateNode(rootSceneNode, glm::mat4(1.0f));
 
-	
-}
 
+}
 
 
 void Renderer::postRender()
 {
-	opaqueDrawables.clear();
-	transparentDrawables.clear();
+	genericDraws.clear();
+	opaqueTexDraws.clear();
+	opaqueMaterialDraws.clear();
+	transparentDraws.clear();
 	lights.clear();
 }
 
+// update SceneGraph and collect DrawNodes to be rendered
+// TODO instead of dynamic_cast, implement visitor pattern
 void Renderer::updateNode(SceneNode* node, const glm::mat4& CTM) {
 	node->updateWorldTransform(CTM);
 
 	if (DrawNode* drawNode = dynamic_cast<DrawNode*>(node)) {
-		if (drawNode->isTransparent()) {
+		if (drawNode->getTransparency() > 0) {
 			glm::vec3 nodePosition = glm::vec3(node->getWorldTransform()[3]);
 			float distance = glm::length(mainCamera->Position - nodePosition);
-			transparentDrawables[distance] = drawNode;//adding to map container using distance as key automatically does the sorting
+			transparentDraws[distance] = drawNode;//adding to map container using distance as key automatically does the sorting from closest to furthest away
 		}
-		else {
-			opaqueDrawables.push_front(drawNode);
+		else if (drawNode->getMaterial()) {
+			if (drawNode->getTexture()) {
+				opaqueTexDraws.push_back(drawNode);
+			}
+			else {
+				opaqueMaterialDraws.push_back(drawNode);
+			}
 		}
+		else { genericDraws.push_back(drawNode); }
 	}
 
 	else if (LightNode* lightNode = dynamic_cast<LightNode*>(node)) {
 		if (lights.size() > MAX_LIGHTS) {
-			std::cout << "Reached maximum of "<< MAX_LIGHTS <<" lights, can't add more!" << std::endl;
+			std::cout << "Reached maximum of " << MAX_LIGHTS << " lights, can't add more!" << std::endl;
 			return;
 		}
 		lights.push_back(lightNode);
@@ -270,36 +299,28 @@ void Renderer::updateNode(SceneNode* node, const glm::mat4& CTM) {
 	}
 }
 
-void Renderer::renderNode(DrawNode* node) {
-	Material material = node->getMaterial();
+void Renderer::renderNode(DrawNode* node, Shader* shader) {
+
 	glm::mat4 model = node->getWorldTransform();
 	glm::mat3 normalMatrix = glm::mat3(glm::transpose(glm::inverse(model)));
-	if (GLuint texture = node->getTexture()) {
-		blendingShader->use();
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture);
-		blendingShader->setMat4("model", model);
-		blendingShader->setMat3("normalMatrix", normalMatrix);
 
-		blendingShader->setVec3("material.ambient", material.ambient);
-		blendingShader->setVec3("material.diffuse", material.diffuse);
-		blendingShader->setVec3("material.specular", material.specular);
-		blendingShader->setFloat("material.shininess", material.shininess);
 
+	shader->setMat4("model", model);
+	shader->setMat3("normalMatrix", normalMatrix);
+
+	if (shader == lightingMaterial || shader == lightingTexture) {
+		Material* material = node->getMaterial();
+		shader->setVec3("material.ambient", material->ambient);
+		shader->setVec3("material.diffuse", material->diffuse);
+		shader->setVec3("material.specular", material->specular);
+		shader->setFloat("material.shininess", material->shininess);
 	}
-	else {
-		genericShader->use();
-		genericShader->setMat4("model", model);
-		genericShader->setMat3("normalMatrix", normalMatrix);
+	
 
-		genericShader->setVec3("material.ambient", material.ambient);
-		genericShader->setVec3("material.diffuse", material.diffuse);
-		genericShader->setVec3("material.specular", material.specular);
-		genericShader->setFloat("material.shininess", material.shininess);
-	}
 	node->draw();
 }
 
+// render nodes to depthMap
 void Renderer::shadowRenderNode(DrawNode* node) {
 	shadowShader->setMat4("model", node->getWorldTransform());
 	node->draw();

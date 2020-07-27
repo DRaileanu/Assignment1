@@ -26,8 +26,10 @@ Model::~Model() {
 
 void Model::createN() {
 	DrawNode* node;
+	GLuint texture = loadTexture("res/container.jpg");
 
 	node = new DrawNode(cube);
+	node->setTexture(texture);
 	node->scale(glm::vec3(2.0f, 2.0, 1.0f));
 	node->translate(glm::vec3(0.0f, 2.5f, 0.0f));
 	node->setManualTransform(glm::mat4(
@@ -39,11 +41,13 @@ void Model::createN() {
 	addChild(node);
 
 	node = new DrawNode(cube);
+	node->setTexture(texture);
 	node->scale(glm::vec3(1.0f, 5.0f, 1.0f));
 	node->translate(glm::vec3(1.5f, 2.5f, 0.0f));
 	addChild(node);
 
 	node = new DrawNode(cube);
+	node->setTexture(texture);
 	node->scale(glm::vec3(1.0f, 5.0f, 1.0f));
 	node->translate(glm::vec3(-1.5f, 2.5f, 0.0f));
 	addChild(node);
@@ -74,7 +78,6 @@ void Model::create1() {
 
 void Model::createH() {
 	DrawNode* node;
-
 	node = new DrawNode(cube);
 	node->scale(glm::vec3(2.0f, 1.0, 1.0f));
 	node->translate(glm::vec3(0.0f, 2.5f, 0.0f));

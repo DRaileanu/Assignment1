@@ -68,11 +68,12 @@ int main() {
 
     // build and compile shader program
     Shader genericShader("shaders/generic.vs", "shaders/generic.fs");
-    Shader blendingShader("shaders/blending.vs", "shaders/blending.fs");
+    Shader lightingMaterial("shaders/lightingMaterial.vs", "shaders/lightingMaterial.fs");
+    Shader lightingTexture("shaders/lightingTexture.vs", "shaders/lightingTexture.fs");
     Shader shadowShader("shaders/shadow.vs", "shaders/shadow.fs", "shaders/shadow.gs");
 
     // setup Renderer
-    Renderer* renderer = new Renderer(mainCamera, &genericShader, &blendingShader, &shadowShader);
+    Renderer* renderer = new Renderer(mainCamera, &genericShader, &lightingMaterial, &lightingTexture, &shadowShader);
 
     // set up the Scene Graph (sets up vertex data, buffers and configures vertex attributes)
     // --------------------------------------------------------------------------------------
@@ -160,12 +161,12 @@ int main() {
 
 
     Sphere* spheredraw = new Sphere(5, 6);
-    //spheredraw->setColours(glm::vec3(1.0, 1.0f, 1.0f));
+    //spheredraw->setColours(glm::vec3(1.0, 0.5f, 0.0f));
     DrawNode* sphere = new DrawNode(spheredraw);
     sphere->translate(glm::vec3(0.0f, 10.0f, -10.0f));
     root->addChild(sphere);
-    //sphere->setTransparent(true);
-    sphere->setTexture(loadTexture("res/container2.jpg"));
+    sphere->setTransparency(0.5f);
+    //sphere->setTexture(loadTexture("res/container2.jpg"));
 
 
     ////default selected node to transform
@@ -175,39 +176,39 @@ int main() {
     root->addChild(lightNodes);
 
     GroupNode* light1Node = new GroupNode();
-    light1Node->translate(glm::vec3(4.0f, 0.0f, 0.0f));
+    light1Node->translate(glm::vec3(2.0f, 0.0f, 0.0f));
     lightNodes->addChild(light1Node);
 
     GroupNode* light2Node = new GroupNode();
-    light2Node->translate(glm::vec3(-2.0f, 0.0f, 3.46f));
+    light2Node->translate(glm::vec3(-2.0f, 0.0f, 0.0f));
     lightNodes->addChild(light2Node);
 
-    GroupNode* light3Node = new GroupNode();
-    light3Node->translate(glm::vec3(-1.0f, 0.0f, -3.46f));
-    lightNodes->addChild(light3Node);
+    //GroupNode* light3Node = new GroupNode();
+    //light3Node->translate(glm::vec3(-1.0f, 0.0f, -3.46f));
+    ////lightNodes->addChild(light3Node);
 
     LightNode* light1 = new LightNode(LightType::PointLight);
     light1->setProperties(LightProperties{
         glm::vec3(0.2f, 0.2f, 0.2f),
-        glm::vec3(3.0f, 3.0f, 3.0f),
-        glm::vec3(1.0f, 1.0f, 1.0f)
+        glm::vec3(0.4f, 0.4f, 0.4f),
+        glm::vec3(1.0f, 1.0f, 1.0f),
         });
     light1Node->addChild(light1);
 
     LightNode* light2 = new LightNode(LightType::PointLight);
     light2->setProperties(LightProperties{
         glm::vec3(0.25f, 0.25f, 0.25f),
+        glm::vec3(0.0f, 0.0f, 3.0f),
         glm::vec3(1.0f, 1.0f, 1.0f),
-        glm::vec3(1.0f, 1.0f, 1.0f)
         });
     //light2Node->addChild(light2);
 
-    LightNode* light3 = new LightNode(LightType::PointLight);
-    light3->setProperties(LightProperties{
-        glm::vec3(0.25f, 0.25f, 0.25f),
-        glm::vec3(1.0f, 1.0f, 1.0f),
-        glm::vec3(1.0f, 1.0f, 1.0f)
-        });
+    //LightNode* light3 = new LightNode(LightType::PointLight);
+    //light3->setProperties(LightProperties{
+    //    glm::vec3(0.25f, 0.25f, 0.25f),
+    //    glm::vec3(1.0f, 1.0f, 1.0f),
+    //    glm::vec3(1.0f, 1.0f, 1.0f)
+    //    });
     //light3Node->addChild(light3);
 
     Drawable* lightcube = new Cube;
@@ -217,11 +218,11 @@ int main() {
     light1Node->addChild(light1cube);
 
     DrawNode* light2cube = new DrawNode(lightcube);
-    light2cube->translate(glm::vec3(0.0f, 0.75f, 0.0f));
-    //light2Node->addChild(light2cube);
+    light2cube->translate(glm::vec3(0.0f, 0.0f, 0.5f));
+    light2Node->addChild(light2cube);
 
-    DrawNode* light3cube = new DrawNode(lightcube);
-    light3cube->translate(glm::vec3(0.0f, 0.75f, 0.0f));
+    //DrawNode* light3cube = new DrawNode(lightcube);
+    //light3cube->translate(glm::vec3(0.0f, 0.75f, 0.0f));
     //light3Node->addChild(light3cube);
 
     //world matrix used to change world orientation
@@ -230,6 +231,7 @@ int main() {
 
     SceneNode* selectedNode = lightNodes;
 
+    renderer->setShadowCasterLight(light1);
     
     renderer->setRootSceneNode(root);
 

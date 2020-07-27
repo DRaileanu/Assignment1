@@ -13,16 +13,17 @@ struct PointLight {
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
-
 };
 
 #define MAX_LIGHTS 3
-uniform PointLight pointLights[MAX_LIGHTS];
+layout(std140) uniform PointLights{
+    PointLight pointLights[MAX_LIGHTS];
+};
 uniform Material material;
-
 uniform vec3 viewPos;
 
 uniform sampler2D texture1;
+uniform float texRatio;
 
 uniform samplerCube depthCubeMap;
 uniform float far_plane;
@@ -47,7 +48,7 @@ void main()
         result += CalcPointLight(pointLights[i], norm, FragPos, viewDir);    
 	}
 
-    FragColor = vec4(result * vec3(texture(texture1, TexCoord)) , 1.0);
+    FragColor = vec4( result * ( (1-texRatio)*Color + vec3(texRatio*texture(texture1, TexCoord)) ), 1.0);
 }
 
 vec3 CalcPointLight(PointLight light, vec3 norm, vec3 fragPos, vec3 viewDir) {
@@ -61,9 +62,9 @@ vec3 CalcPointLight(PointLight light, vec3 norm, vec3 fragPos, vec3 viewDir) {
     //float distance = length(light.position - fragPos);
     //float attenuation = 1.0 / (1 + 0.01 * distance + 0.0025 * (distance * distance));    
     // combine results
-    vec3 ambient = light.ambient;
-    vec3 diffuse = light.diffuse * diff ;
-    vec3 specular = light.specular * spec;
+    vec3 ambient = light.ambient * material.ambient;
+    vec3 diffuse = light.diffuse * diff * material.diffuse;
+    vec3 specular = light.specular * spec * material.specular;
    // ambient *= attenuation;
     //diffuse *= attenuation;
     //specular *= attenuation;
