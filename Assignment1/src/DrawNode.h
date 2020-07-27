@@ -12,7 +12,7 @@ struct Material {
 class DrawNode : public SceneNode {
 public:
 	//DrawNode() {}
-	DrawNode(Drawable* d) : drawable(d), material{ glm::vec3(0.24725, 0.2245, 0.0645), glm::vec3(0.34615, 0.3143, 0.0903), glm::vec3(0.797357, 0.723991, 0.208006), 83.2f } {}
+	DrawNode(Drawable* d) : drawable(d), transparency(0) {}
 	~DrawNode() {}
 
 	Drawable* getDrawable() { return drawable; }
@@ -24,19 +24,19 @@ public:
 		}
 	}
 
-	Material getMaterial() { return material; }
-	void setMaterial(Material m) { material = m; }
+	Material* getMaterial() { return material; }
+	void setMaterial(Material* m) { material = m; }
 
 	GLuint getTexture() { return texture; }
 	void setTexture(GLuint tex) { texture = tex; }
 
-	bool isTransparent() { return transparent; }
-	void setTransparent(bool t) { transparent = t; }
+	float getTransparency() { return transparency; }
+	void setTransparency(float t) { transparency = t; }
 
 private:
 	Drawable* drawable;
-	Material material;
+	Material* material;
 	GLuint texture;
-	bool transparent;
+	float transparency;
 };
 

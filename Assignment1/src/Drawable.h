@@ -11,7 +11,7 @@
 class Drawable {
 
 public:
-	enum AttributeTypes { VERTEX_BUFFER, NORMAL_BUFFER, COLOUR_BUFFER, TEXTURE_BUFFER, INDEX_BUFFER, NUM_BUFFERS };
+	enum AttributeTypes { VERTEX_BUFFER, NORMAL_BUFFER, COLOUR_BUFFER, TEXTURE_BUFFER, INDEX_BUFFER, NUM_BUFFERS };	//layout has to match that of shaders
 	Drawable();
 	virtual ~Drawable();
 

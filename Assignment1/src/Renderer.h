@@ -10,8 +10,8 @@
 
 #include <iostream>
 #include <vector>
-#include <forward_list>
 #include <map>
+#include <algorithm>
 
 #include "Camera.h"
 #include "GroupNode.h"
@@ -24,9 +24,12 @@ extern const unsigned int SCR_HEIGHT;
 
 class Renderer{
 	const static int MAX_LIGHTS = 3;//be sure that it matches the MAX_LIGHTS from shaders
-	const static unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+	const static unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;//quality of depth map
+	//if want variable far_plane, need to send them to shaders in render() and not in constructor!
+	const float near_plane = 0.1;//minimum distance from which depth is computed
+	const float far_plane = 100;//maximum distance at which depth is computed
 public:
-	Renderer(Camera* camera, Shader* genericShader, Shader* blendingShader, Shader* shadowShader);
+	Renderer(Camera* camera, Shader* genericShader, Shader* lightingMaterial, Shader* lightingTexture, Shader* shadowShader);
 	~Renderer();
 
 	void updateScene();
@@ -34,6 +37,8 @@ public:
 
 	void setRootSceneNode(GroupNode* node) { rootSceneNode = node; }
 	void removeRootSceneNode() { rootSceneNode = NULL; }
+
+	void setShadowCasterLight(LightNode* light) { shadowCasterLight = light; }
 
 	//drawing parameters
 	void setPolygonMode(GLuint mode) { polygonMode = mode; }
@@ -43,17 +48,24 @@ public:
 	void postRender();//for benchmarking purposes, remove later. (need to be called after every preRender/render or refilling drawables list with repeating data)
 
 private:
-
 	Shader* genericShader;
-	Shader* blendingShader;
+	Shader* lightingMaterial;
+	Shader* lightingTexture;
 	Shader* shadowShader;
 
 	Camera* mainCamera;
 
 	GroupNode* rootSceneNode;
+
+	std::vector<DrawNode*> genericDraws;
+	std::vector<DrawNode*> opaqueTexDraws;
+	std::vector<DrawNode*> opaqueMaterialDraws;
+	std::map< float, DrawNode*> transparentDraws;
+
+	GLuint pointLightsUniformBlock;
 	std::vector<LightNode*> lights;
-	std::forward_list<DrawNode*> opaqueDrawables;
-	std::map<float, DrawNode*> transparentDrawables;
+
+	LightNode* shadowCasterLight;
 
 	GLuint polygonMode;
 	float texRatio;
@@ -66,10 +78,9 @@ private:
 	
 
 	void updateNode(SceneNode* node, const glm::mat4& CTM);
-	void renderNode(DrawNode* node);
+	void renderNode(DrawNode* node, Shader*);
 	void shadowRenderNode(DrawNode* node);
 	
-
 
 };
 
