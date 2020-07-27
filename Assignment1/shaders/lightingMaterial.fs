@@ -15,24 +15,22 @@ struct PointLight {
     vec3 specular;
 };
 
-
 #define MAX_LIGHTS 3
-
 layout(std140) uniform PointLights{
     PointLight pointLights[MAX_LIGHTS];
 };
-
 uniform vec3 shadowCastingLightPos;
 uniform Material material;
 uniform vec3 viewPos;
+
+uniform samplerCube depthCubeMap;
+uniform float far_plane;
+uniform bool shadows;
 
 in vec3 FragPos;
 in vec3 Normal;
 in vec3 Color;
 
-uniform samplerCube depthCubeMap;
-uniform float far_plane;
-uniform bool shadows;
 
 vec3 CalcPointLight(PointLight light, vec3 norm, vec3 FragPos, vec3 viewDir);
 float ShadowCalculation(vec3 FragPos);
@@ -81,14 +79,14 @@ float ShadowCalculation(vec3 FragPos)
 {
     // get vector between fragment position and light position
     vec3 fragToLight = FragPos - shadowCastingLightPos;
-    // ise the fragment to light vector to sample from the depth map    
+    // use the fragment to light vector to sample from the depth map    
     float closestDepth = texture(depthCubeMap, fragToLight).r;
-    // it is currently in linear range between [0,1], let's re-transform it back to original depth value
+    // it is currently in linear range between [0,1], re-transform it back to original depth value
     closestDepth *= far_plane;
     // now get current linear depth as the length between the fragment and light position
     float currentDepth = length(fragToLight);
     // test for shadows
-    float bias = 0.5; // we use a much larger bias since depth is now in [near_plane, far_plane] range
+    float bias = 0.5;
     float shadow = currentDepth -  bias > closestDepth ? 1.0 : 0.0;        
     // display closestDepth as debug (to visualize depth cubemap)
     // FragColor = vec4(vec3(closestDepth / far_plane), 1.0);    

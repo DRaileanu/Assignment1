@@ -36,67 +36,66 @@ void SceneNode::updateWorldTransform(const glm::mat4& CTM) {
 
 
 void SceneNode::setTranslation(glm::vec3 t) {
-	translation = t;
 	dirty = true;
+	translation = t;
 }
 
 void SceneNode::setRotation(glm::vec3 r) {
-	rotation = r;
 	dirty = true;
+	rotation = r;
 }
 
 void SceneNode::setScaling(glm::vec3 s) {
-	scaling = s;
 	dirty = true;
+	scaling = s;
 }
 
 void SceneNode::setManualTransform(glm::mat4 m) {
-	manualTransform = m;
 	dirty = true;
+	manualTransform = m;
 }
 
 
 void SceneNode::translate(glm::vec3 t) {
-	translation += t;
 	dirty = true;
+	translation += t;
 }
 
 void SceneNode::scale(glm::vec3 s) {
-	scaling = s*scaling;
 	dirty = true;
+	scaling = s*scaling;
 }
 
 void SceneNode::rotate(glm::vec3 r) {
+	dirty = true;
 	rotation += r;
-	dirty = true;
 }
-void SceneNode::moveForward(glm::vec3 t) {
-	int cycles = rotation.y / 360;
-	//std::cout << cycles;
-	float degrees = rotation.y - (cycles * 360);
-	float dx = (std::sin(glm::radians(degrees)));
-	float dz = (std::cos(glm::radians(degrees)));//sin(degrees)
-	t.x = dx;
-	t.z = dz;
-	translation += t;
+void SceneNode::moveForward(float amount) {
 	dirty = true;
-	std::cout << t.z;
-	//std::cout <<"rotation.y: "<<rotation.y <<"cycles: "<<cycles <<"degrees: "<< degrees <<"\n";
-	//std::cout <<"angle now is: "<< rotation.x << " " << rotation.y << " " << rotation.z;
+	glm::mat4 trans = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -amount));
+	glm::mat4 rot = glm::rotate(glm::mat4(1.0f), glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+	translation += glm::vec3((rot * trans)[3]);
+}
+void SceneNode::moveBackwards(float amount) {
+	dirty = true;
+	glm::mat4 trans = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, amount));
+	glm::mat4 rot = glm::rotate(glm::mat4(1.0f), glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+	translation += glm::vec3((rot * trans)[3]);
+}
+
+void SceneNode::strafeLeft(float amount) {
+	dirty = true;
+	glm::mat4 trans = glm::translate(glm::mat4(1.0f), glm::vec3(-amount, 0.0f, 0.0f));
+	glm::mat4 rot = glm::rotate(glm::mat4(1.0f), glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+	translation += glm::vec3((rot * trans)[3]);
 
 }
-void SceneNode::moveBackwards(glm::vec3 t) {
-	int cycles = rotation.y / 360;
-	//std::cout << cycles;
-	float degrees = rotation.y - (cycles * 360);
-	float dx = (std::sin(glm::radians(degrees)))/-1;
-	float dz = (std::cos(glm::radians(degrees)))/-1;//sin(degrees)
-	t.x = dx;
-	t.z = dz;
-	translation += t;
+
+void SceneNode::strafeRight(float amount) {
 	dirty = true;
-	std::cout << t.z;
-	//std::cout <<"rotation.y: "<<rotation.y <<"cycles: "<<cycles <<"degrees: "<< degrees <<"\n";
-	//std::cout <<"angle now is: "<< rotation.x << " " << rotation.y << " " << rotation.z;
+	glm::mat4 trans = glm::translate(glm::mat4(1.0f), glm::vec3(amount, 0.0f, 0.0f));
+	glm::mat4 rot = glm::rotate(glm::mat4(1.0f), glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+	translation += glm::vec3((rot * trans)[3]);
 
 }
+

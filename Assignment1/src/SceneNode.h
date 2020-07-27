@@ -2,6 +2,7 @@
 // While the implementation of this class is authentic, the general structure was highly inspired from:
 // JMonkeyEngine Scene Graph for Dummies https://wiki.jmonkeyengine.org/tutorials/scenegraph/assets/fallback/index.html
 // OpenSceneGraph https://codedocs.xyz/openscenegraph/OpenSceneGraph/annotated.html
+// SceneView https://ashuang.github.io/sceneview/index.html
 //---------------------------------------------------------------------------------------------------------------------
 
 #pragma once
@@ -10,21 +11,13 @@
 #include "Drawable.h"
 #include <vector>
 
-//base class for nodes in a Scene Graph
-//holds pointer to its Drawable geometry to draw it and provides implementation for basic geometry manipulation via rotate, scale and translate
-
-//enum class SceneNodeType {
-//	GroupNode,
-//	DrawNode,
-//	LightNode
-//};
-
+//base class for nodes in a Scene Graph. Cannot be instantiated on it's own, use derived classes
+//the class is meant to provide the basic topology functions used in a SceneGraph
 
 class SceneNode {
 public:
 	virtual ~SceneNode();
 
-	//virtual SceneNodeType nodeType() const = 0;
 	//get transform parameters
 	const glm::vec3 getTranslation() { return translation; }
 	const glm::vec3 getRotation() { return rotation; }
@@ -39,37 +32,26 @@ public:
 	void translate(glm::vec3);
 	void scale(glm::vec3);
 	void rotate(glm::vec3);//input is rotation along xyz-axes in degrees. Rotations are applied in order: ZYX
-	void moveForward(glm::vec3);
-	void moveBackwards(glm::vec3);
-
 	
+	void moveForward(float amount);//move in -z direction relative to local axis
+	void moveBackwards(float amount);//move in z direction relative to local axis
+	void strafeLeft(float amount);//move in -x direction relative to local axis
+	void strafeRight(float amount);//move in x direction relative to local axis
+
+
+	//worldTransformation
 	const glm::mat4& getWorldTransform() { return worldTransform; }
-
-
-
-
-	//virtual void draw();
 	void updateWorldTransform(const glm::mat4& CTM);
 
-	//void addChild(SceneNode*);
-	//void removeChild(SceneNode*);
-	//std::vector<SceneNode*> getChildren() { return children; }
-
-	//Drawable* getDrawable() const { return drawable; }
-	//void setDrawable(Drawable* drawable) { this->drawable = drawable; }
-
-	bool isDirty() { return dirty; }
+	bool isDirty() { return dirty; }//optimization to avoid recomputing localTransform if hasn't changed since last frame
 	
 
 protected:
 	SceneNode();//not allowed to instantiate SceneNode on their own, must be a derived class
 	void updateLocalTransform();
 
-	//SceneNode*	parent;
-	//Drawable*	drawable;
 	glm::mat4	worldTransform;
 	glm::mat4	localTransform;
-	//std::vector<SceneNode*> children;
 
 	glm::vec3	translation;
 	glm::vec3	rotation;
@@ -77,6 +59,5 @@ protected:
 	glm::mat4	manualTransform;
 
 	bool dirty;//used to know if localTransform needs to be updated to improve performance
-	bool visible;
 };
 

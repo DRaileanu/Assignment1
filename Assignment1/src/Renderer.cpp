@@ -9,7 +9,6 @@ Renderer::Renderer(Camera* camera, Shader* genericShader,  Shader* lightingMater
 	this->shadowShader = shadowShader;
 	shadowCasterLight = NULL;
 
-	polygonMode = GL_TRIANGLES;
 	texRatio = 1.0f;
 	shadowMode = true;
 
@@ -88,7 +87,7 @@ void Renderer::render() {
 	glm::vec3 viewPos = mainCamera->Position;
 
 
-	//NOTE: checking only for shadowCasterLight can result in case where light was set but was removed from Scene Graph
+	//TODO: checking for shadowCasterLight can be a problem if LightNode is deleted from main. Solution: smart pointers
 	if (shadowMode && shadowCasterLight) {
 
 		//TODO for now only PointLight implementation of shadows is made. Add others if needed later
@@ -142,11 +141,8 @@ void Renderer::render() {
 
 
 
-
-
 	//configure rest of shaders
 	//---------------------
-
 	glBindBuffer(GL_UNIFORM_BUFFER, pointLightsUniformBlock);
 	for (int i = 0; i < lights.size(); ++i) {
 		LightProperties prop = lights[i]->getProperties();
@@ -158,17 +154,13 @@ void Renderer::render() {
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 
-
 	genericShader->use();
 	genericShader->setMat4("VP", VP);
-
 
 	lightingMaterialShader->use();
 	lightingMaterialShader->setMat4("VP", VP);
 	lightingMaterialShader->setVec3("viewPos", viewPos);
 	lightingMaterialShader->setBool("shadows", shadowMode);
-
-
 
 	lightingTextureShader->use();
 	lightingTextureShader->setMat4("VP", VP);
@@ -178,21 +170,24 @@ void Renderer::render() {
 
 
 
-
-
-	//std::sort(opaqueTexDraws.begin(), opaqueTexDraws.end(), [](DrawNode* a, DrawNode* b) {
-	//	if (a->getTexture() < b->getTexture()) {
-	//		return true;
-	//	}
-	//	else {
-	//		return a->getMaterial() < b->getMaterial();
-	//	}
-	//});
+	//sort DrawNodes by Texture and Material to reduce state changes.
+	//commented-out, since there's so too few Materials/Textures, so sorting is not worth it. Usefull for project maybe?
+	/*
+	std::sort(opaqueTexDraws.begin(), opaqueTexDraws.end(), [](DrawNode* a, DrawNode* b) {
+		if (a->getTexture() < b->getTexture()) {
+			return true;
+		}
+		else {
+			return a->getMaterial() < b->getMaterial();
+		}
+	});
 
 	//std::sort(opaqueMaterialDraws.begin(), opaqueMaterialDraws.end(), [](DrawNode* a, DrawNode* b) {
 	//	return a->getMaterial() < b->getMaterial();
 	//});
+	*/
 
+	//sort transparent DrawNodes from furthest to closest
 	std::sort(transparentDraws.begin(), transparentDraws.end(), [&](DrawNode* a, DrawNode* b) {
 		glm::vec3 aPos = glm::vec3(a->getWorldTransform()[3]);
 		glm::vec3 bPos = glm::vec3(b->getWorldTransform()[3]);
@@ -203,13 +198,13 @@ void Renderer::render() {
 
 	
 
-
+	//DRAW CALLS
+	//----------
 	
-	// render opaques before transparents
 	glDisable(GL_BLEND);//needs to be disabled just in case Drawable has alpha <1.0 but DrawNode sets transparency to false
 	glEnable(GL_CULL_FACE);//optimization
 
-
+	//DrawNodes that do not have Materials set
 	genericShader->use();
 	for (auto& node : genericDraws) {
 		glm::mat4 model = node->getWorldTransform();
@@ -218,6 +213,7 @@ void Renderer::render() {
 		node->draw();
 	}
 
+	//DrawNodes with Material and Texture
 	lightingTextureShader->use();
 	lightingTextureShader->setFloat("texRatio", texRatio);
 	for (auto& node : opaqueTexDraws) {
@@ -247,6 +243,7 @@ void Renderer::render() {
 		node->draw();
 	}
 	
+	//DrawNodes with Materials and no Texture
 	lightingMaterialShader->use();
 	for (auto& node : opaqueMaterialDraws) {
 		static Material* prevMaterial = NULL;
@@ -268,13 +265,12 @@ void Renderer::render() {
 	}
 
 
-
-	// render transparents, back to front
+	// render transparents, which are already sorted back to front
 	// rendering with genericShader, so doent't draw textures even if present and not affected by lighting. Just an implementation detail
 	// if need different behaviour, requires new shader(s)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glDepthMask(GL_FALSE);
+	glDepthMask(GL_FALSE);//don't write to depth buffer, or else incorectly draws transparent objects that overlap
 
 	genericShader->use();
 	glCullFace(GL_FRONT);
@@ -297,6 +293,7 @@ void Renderer::render() {
 	}
 
 
+	//clear containers
 	genericDraws.clear();
 	opaqueTexDraws.clear();
 	opaqueMaterialDraws.clear();
@@ -309,10 +306,7 @@ void Renderer::updateScene() {
 		return;
 	}
 	updateNode(rootSceneNode, glm::mat4(1.0f));
-
-
 }
-
 
 
 // update SceneGraph and collect DrawNodes to be rendered

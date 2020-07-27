@@ -33,7 +33,7 @@ public:
 	Renderer(Camera* camera, Shader* genericShader, Shader* lightingMaterialShader, Shader* lightingTextureShader, Shader* shadowShader);
 	~Renderer();
 
-	void updateScene();//updates worldTransform for all nodes under rootSceneNode and sorts all DrawNodes into appropriate vectors for later future draw calls
+	void updateScene();//makes first call to updateNode() that updates worldTransform for all nodes under rootSceneNode and sorts all DrawNodes into appropriate vectors for later future draw calls
 	void render();
 
 	void setRootSceneNode(GroupNode* node) { rootSceneNode = node; }
@@ -42,9 +42,9 @@ public:
 	void setShadowCasterLight(LightNode* light) { shadowCasterLight = light; }//wont generate shadows if not specifying this
 
 	//drawing parameters
-	void setPolygonMode(GLuint mode) { polygonMode = mode; }//render using TRIANGLES/LINES/POINTS
-	void setTexRatio(float ratio) { texRatio = ratio; }//turn textures on or off (or some weird mix)
-	void setShadowMode(bool mode) { shadowMode = mode; }//whether to compute shadows
+	void setTexRatio(float ratio) { texRatio = ratio; }//manually set TexRatio (not used since assignment says to toggle, leaving if needed later
+	void toggleTexture() {texRatio = (texRatio == 0) ? 1.0f : 0.0f;	}
+	void toggleShadowMode() { shadowMode = !shadowMode; }
 
 
 
@@ -70,7 +70,6 @@ private:
 
 	LightNode* shadowCasterLight;//although can have MAX_LIGHTS number of lights in scene, only 1 can cast shadows
 
-	GLuint polygonMode;
 	float texRatio;
 	bool shadowMode;
 
@@ -78,7 +77,7 @@ private:
 	GLuint depthCubeMap = 0;//cube depth map texture to hold info for shadow maping Point Lights
 
 
-	void updateNode(SceneNode* node, const glm::mat4& CTM);
+	void updateNode(SceneNode* node, const glm::mat4& CTM);//recursively updates worldTransforms in Scene and sorts into containers
 	
 
 };
