@@ -1,4 +1,6 @@
 #include "Model.h"
+#include <glm/gtx/transform2.hpp>
+
 
 Model::Model(char c) {
 	cube = new Cube;
@@ -317,9 +319,22 @@ void Model::setColours(glm::vec3 newColour) {
 
 
 void Model::pitchForward(float pitch) {
-	topPart->rotate(glm::vec3(-pitch, 0.0f, 0.0f));
+	topPart->rotate(glm::vec3(pitch, 0.0f, 0.0f));
 }
 
 void Model::pitchBackward(float pitch) {
-	topPart->rotate(glm::vec3(pitch, 0.0f, 0.0f));
+	topPart->rotate(glm::vec3(-pitch, 0.0f, 0.0f));
 }
+
+void Model::shearRight(float shear) {
+	glm::mat4 matr = topPart->getManualTransform();
+	matr = glm::shearY3D(matr, -shear, 0.0f) ;
+	topPart->setManualTransform(matr);
+}
+
+void Model::shearLeft(float shear) {
+	glm::mat4 matr = topPart->getManualTransform();
+	matr = glm::shearY3D(matr, shear, 0.0f);
+	topPart->setManualTransform(matr);
+}
+

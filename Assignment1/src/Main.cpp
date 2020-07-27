@@ -364,12 +364,18 @@ int main() {
         }
 
         if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
-            model1->pitchForward(50.0*dt);
+            model1->pitchForward(100*dt);
         }
         if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
-            model1->pitchBackward(50.0 * dt);
+            model1->pitchBackward(100 * dt);
         }
 
+        if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) {
+            model1->shearRight(dt);
+        }
+        if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) {
+            model1->shearLeft(dt);
+        }
 
 
 

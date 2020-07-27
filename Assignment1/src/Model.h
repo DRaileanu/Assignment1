@@ -17,6 +17,10 @@ public:
 
 	void pitchForward(float pitch);
 	void pitchBackward(float pitch);
+	void shearRight(float shear);
+	void shearLeft(float shear);
+	void shearUp(float shear);
+	void shearDown(float shear);
 
 private:
 	//available models
