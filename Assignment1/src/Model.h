@@ -25,7 +25,6 @@ public:
 	void scaleTop(float scale);
 
 private:
-	//void addChild(SceneNode*) override;//Not allowed
 	//available models
 	void createN();
 	void create1();

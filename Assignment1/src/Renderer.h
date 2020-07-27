@@ -78,7 +78,7 @@ private:
 	
 
 	void updateNode(SceneNode* node, const glm::mat4& CTM);
-	void renderNode(DrawNode* node, Shader*);
+	void renderNode(DrawNode* node);
 	void shadowRenderNode(DrawNode* node);
 	
 

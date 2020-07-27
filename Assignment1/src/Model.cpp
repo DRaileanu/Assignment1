@@ -13,6 +13,12 @@ Model::Model(char c) {
 	topPart->translate(glm::vec3(0.0f, 2.5f, 0.0f));
 	addChild(topPart);
 
+	DrawNode* sphereNode = new DrawNode(sphere);
+	sphereNode->setTransparency(0.6);
+	sphereNode->translate(glm::vec3(0.0f, 3.0f, 0.0f));
+	topPart->addChild(sphereNode);
+
+
 	switch (c) {
 	case 'N': {createN(); }
 	break;
@@ -35,9 +41,6 @@ Model::~Model() {
 	delete cube;
 }
 
-//void Model::addChild(SceneNode* node) {
-//
-//}
 
 void Model::createN() {
 	DrawNode* node;
@@ -62,8 +65,6 @@ void Model::createN() {
 	bottomPart->addChild(node);
 
 
-
-
 	node = new DrawNode(cube);
 	node->scale(glm::vec3(1.0f, 2.5f, 1.0f));
 	node->translate(glm::vec3(1.5f, 1.25f, 0.0f));
@@ -75,7 +76,6 @@ void Model::createN() {
 	bottomPart->addChild(node);
 
 
-
 	node = new DrawNode(cube);
 	node->scale(glm::vec3(1.0f, 2.5f, 1.0f));
 	node->translate(glm::vec3(-1.5f, 1.25f, 0.0f));
@@ -85,6 +85,8 @@ void Model::createN() {
 	node->scale(glm::vec3(1.0f, 2.5f, 1.0f));
 	node->translate(glm::vec3(-1.5f, 1.25f, 0.0f));
 	bottomPart->addChild(node);
+
+
 
 }
 
@@ -329,6 +331,26 @@ void Model::setMaterial(Material* material) {
 		auto lambda = [&](SceneNode* node, const auto& lambda)->void {
 			if (DrawNode* drawNode = dynamic_cast<DrawNode*>(node)) {
 				drawNode->setMaterial(material);
+				return;
+			}
+			else if (GroupNode* groupNode = dynamic_cast<GroupNode*>(node)) {
+				for (SceneNode* child : groupNode->getChildren()) {
+					lambda(child, lambda);
+				}
+			}
+			else return;
+		};
+		return lambda(node, lambda);
+	};
+	traversal(this);
+
+}
+//using lambda recursion, sets textures for all DrawNodes under this Model
+void Model::setTexture(GLuint tex) {
+	auto traversal = [&](SceneNode* node)->void {
+		auto lambda = [&](SceneNode* node, const auto& lambda)->void {
+			if (DrawNode* drawNode = dynamic_cast<DrawNode*>(node)) {
+				drawNode->setTexture(tex);
 				return;
 			}
 			else if (GroupNode* groupNode = dynamic_cast<GroupNode*>(node)) {

@@ -60,7 +60,7 @@ int main() {
     programInit();
 
     // setup Camera
-    mainCamera = new Camera(glm::vec3(0.0f, 7.5f, 7.5f));
+    mainCamera = new Camera(glm::vec3(0.0f, 7.5f, 10.0f));
     glfwGetCursorPos(window, &lastX, &lastY);
 
     ////frame time parameters
@@ -83,12 +83,20 @@ int main() {
         glm::vec3(0.1, 0.1, 0.1), 
         glm::vec3(0.5, 0.5, 0.5), 
         glm::vec3(0.75, 0.75f, 0.75f), 
-        32.0 };
+        32.0 
+    };
     Material* polishedGoldMaterial = new Material{
     glm::vec3(0.24725, 0.2245, 0.0645),
     glm::vec3(0.34615, 0.3143, 0.0903),
     glm::vec3(0.797357, 0.723991, 0.208006),
-    83.2 };
+    83.2 
+    };
+    Material* textureMaterial = new Material{
+        glm::vec3(0.1, 0.1, 0.1),
+        glm::vec3(0.4, 0.4, 0.4),
+        glm::vec3(0.5, 0.5, 0.5),
+        1.0 
+    };
 
     GLuint tileTexture = loadTexture("res/tile.jpg");
     GLuint woodTexture = loadTexture("res/wood.jpg");
@@ -112,15 +120,17 @@ int main() {
     // student models
     GroupNode* dan = new GroupNode;
     dan->scale(glm::vec3(2.0f, 2.0f, 2.0f));
-    dan->translate(glm::vec3(0.0f, 0.0f, 5.0f));
+    dan->translate(glm::vec3(-40.0f, 0.0f, -40.0f));
     root->addChild(dan);
 
     Model* model1 = new Model('N');
-    model1->setMaterial(polishedGoldMaterial);
+    model1->setMaterial(textureMaterial);
+    model1->setTexture(woodTexture);
     model1->translate(glm::vec3(-2.5f, 0.0f, 0.0f));
     dan->addChild(model1);
 
     Model* model2 = new Model('1');
+    model2->setMaterial(polishedGoldMaterial);
     model2->translate(glm::vec3(2.5f, 0.0f, 0.0f));
     dan->addChild(model2);
 
@@ -131,10 +141,13 @@ int main() {
     root->addChild(moh);
 
     Model* model3 = new Model('H');
+    model3->setMaterial(textureMaterial);
+    model3->setTexture(woodTexture);
     model3->translate(glm::vec3(-2.5f, 0.0f, 0.0f));
     moh->addChild(model3);
 
     Model* model4 = new Model('5');
+    model4->setMaterial(polishedGoldMaterial);
     model4->translate(glm::vec3(2.5f, 0.0f, 0.0f));
     moh->addChild(model4);
 
@@ -145,10 +158,13 @@ int main() {
     root->addChild(muher);
 
     Model* model5 = new Model('H');
+    model5->setMaterial(textureMaterial);
+    model5->setTexture(woodTexture);
     model5->translate(glm::vec3(-2.5f, 0.0f, 0.0f));
     muher->addChild(model5);
 
     Model* model6 = new Model('2');
+    model6->setMaterial(polishedGoldMaterial);
     model6->translate(glm::vec3(2.5f, 0.0f, 0.0f));
     muher->addChild(model6);
 
@@ -159,10 +175,13 @@ int main() {
     root->addChild(radhep);
 
     Model* model7 = new Model('D');
+    model7->setMaterial(textureMaterial);
+    model7->setTexture(woodTexture);
     model7->translate(glm::vec3(-2.5f, 0.0f, 0.0f));
     radhep->addChild(model7);
 
     Model* model8 = new Model('3');
+    model8->setMaterial(polishedGoldMaterial);
     model8->translate(glm::vec3(2.5f, 0.0f, 0.0f));
     radhep->addChild(model8);
 
@@ -173,25 +192,19 @@ int main() {
     root->addChild(mohd);
 
     Model* model9 = new Model('H');
+    model9->setMaterial(textureMaterial);
+    model9->setTexture(woodTexture);
     model9->translate(glm::vec3(-2.5f, 0.0f, 0.0f));
     mohd->addChild(model9);
 
     Model* model10 = new Model('1');
+    model10->setMaterial(polishedGoldMaterial);
     model10->translate(glm::vec3(2.5f, 0.0f, 0.0f));
     mohd->addChild(model10);
 
 
-    Sphere* spheredraw = new Sphere(2.5, 5);
-    //spheredraw->setColours(glm::vec3(1.0, 0.5f, 0.0f));
-    DrawNode* sphere = new DrawNode(spheredraw);
-    sphere->translate(glm::vec3(0.0f, 10.0f, -10.0f));
-    root->addChild(sphere);
-    sphere->setTransparency(0.5f);
-    //sphere->setTexture(loadTexture("res/container2.jpg"));
-
-
-    ////default selected node to transform
-
+    
+    //light sources
     GroupNode* lightNodes = new GroupNode();
     lightNodes->translate(glm::vec3(0.0f, 10.0f, 0.0f));
     root->addChild(lightNodes);
@@ -246,10 +259,14 @@ int main() {
     //light3cube->translate(glm::vec3(0.0f, 0.75f, 0.0f));
     //light3Node->addChild(light3cube);
 
+
+
+
     //world matrix used to change world orientation
     glm::mat4 world(1.0f);
 
 
+    //default selected node to transform
     SceneNode* selectedNode = lightNodes;
 
     renderer->setShadowCasterLight(light1);

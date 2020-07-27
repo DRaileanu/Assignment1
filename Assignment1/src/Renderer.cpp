@@ -181,8 +181,17 @@ void Renderer::render() {
 
 
 
-	//std::sort(opaqueTexDraws.begin(), opaqueTexDraws.end(), [](DrawNode* a, DrawNode* b) {return a->getTexture() < b->getTexture(); });
-
+	//std::sort(opaqueTexDraws.begin(), opaqueTexDraws.end(), [](DrawNode* a, DrawNode* b) {
+	//	if (a->getTexture() < b->getTexture()) {
+	//		return true;
+	//	}
+	//	else {
+	//		return a->getMaterial() < b->getMaterial();
+	//	}
+	//});
+	//std::sort(opaqueMaterialDraws.begin(), opaqueMaterialDraws.end(), [](DrawNode* a, DrawNode* b) {
+	//	return a->getMaterial() < b->getMaterial();
+	//});
 	
 
 
@@ -194,18 +203,59 @@ void Renderer::render() {
 
 	genericShader->use();
 	for (auto& node : genericDraws) {
-		renderNode(node, genericShader);
+		glm::mat4 model = node->getWorldTransform();
+		genericShader->setMat4("model", model);
+
+		node->draw();
 	}
+
 	lightingTexture->use();
 	lightingTexture->setFloat("texRatio", texRatio);
 	for (auto& node : opaqueTexDraws) {
-		glActiveTexture(GL_TEXTURE0); 
-		glBindTexture(GL_TEXTURE_2D, node->getTexture());
-		renderNode(node, lightingTexture);
+		static GLuint prevTexture = 0;
+		static Material* prevMaterial = NULL;
+		GLuint texture = node->getTexture();
+		Material* material = node->getMaterial();
+
+		if (texture != prevTexture) {
+			prevTexture = texture;
+			glActiveTexture(GL_TEXTURE0);//technically not needed, but needed if want to add several textures later, so leaving to not forget about it
+			glBindTexture(GL_TEXTURE_2D, texture);
+		}
+		if (material != prevMaterial) {
+			prevMaterial = material;
+			lightingTexture->setVec3("material.ambient", material->ambient);
+			lightingTexture->setVec3("material.diffuse", material->diffuse);
+			lightingTexture->setVec3("material.specular", material->specular);
+			lightingTexture->setFloat("material.shininess", material->shininess);
+		}
+
+		glm::mat4 model = node->getWorldTransform();
+		glm::mat3 normalMatrix = glm::mat3(glm::transpose(glm::inverse(model)));
+		lightingTexture->setMat4("model", model);
+		lightingTexture->setMat3("normalMatrix", normalMatrix);
+
+		node->draw();
 	}
+	
 	lightingMaterial->use();
 	for (auto& node : opaqueMaterialDraws) {
-		renderNode(node, lightingMaterial);
+		static Material* prevMaterial = NULL;
+		Material* material = node->getMaterial();
+		if (material != prevMaterial) {
+			prevMaterial = material;
+			lightingMaterial->setVec3("material.ambient", material->ambient);
+			lightingMaterial->setVec3("material.diffuse", material->diffuse);
+			lightingMaterial->setVec3("material.specular", material->specular);
+			lightingMaterial->setFloat("material.shininess", material->shininess);
+		}
+
+		glm::mat4 model = node->getWorldTransform();
+		glm::mat3 normalMatrix = glm::mat3(glm::transpose(glm::inverse(model)));
+		lightingMaterial->setMat4("model", model);
+		lightingMaterial->setMat3("normalMatrix", normalMatrix);
+
+		node->draw();
 	}
 
 	// render transparents, back to front
@@ -229,12 +279,20 @@ void Renderer::render() {
 	glCullFace(GL_FRONT);
 	for (auto iter = transparentDraws.rbegin(); iter != transparentDraws.rend(); ++iter) {
 		genericShader->setFloat("transparency", iter->second->getTransparency());
-		renderNode(iter->second, genericShader);
+
+		glm::mat4 model = iter->second->getWorldTransform();
+		genericShader->setMat4("model", model);
+
+		iter->second->draw();
 	}
 	glCullFace(GL_BACK);
 	for (auto iter = transparentDraws.rbegin(); iter != transparentDraws.rend(); ++iter) {
 		genericShader->setFloat("transparency", iter->second->getTransparency());
-		renderNode(iter->second, genericShader);
+		
+		glm::mat4 model = iter->second->getWorldTransform();
+		genericShader->setMat4("model", model);
+
+		iter->second->draw();
 	}
 
 
@@ -298,25 +356,25 @@ void Renderer::updateNode(SceneNode* node, const glm::mat4& CTM) {
 	}
 }
 
-void Renderer::renderNode(DrawNode* node, Shader* shader) {
+void Renderer::renderNode(DrawNode* node) {
 
-	glm::mat4 model = node->getWorldTransform();
-	glm::mat3 normalMatrix = glm::mat3(glm::transpose(glm::inverse(model)));
+	//glm::mat4 model = node->getWorldTransform();
+	//glm::mat3 normalMatrix = glm::mat3(glm::transpose(glm::inverse(model)));
 
 
-	shader->setMat4("model", model);
-	shader->setMat3("normalMatrix", normalMatrix);
+	//shader->setMat4("model", model);
+	//shader->setMat3("normalMatrix", normalMatrix);
 
-	if (shader == lightingMaterial || shader == lightingTexture) {
-		Material* material = node->getMaterial();
-		shader->setVec3("material.ambient", material->ambient);
-		shader->setVec3("material.diffuse", material->diffuse);
-		shader->setVec3("material.specular", material->specular);
-		shader->setFloat("material.shininess", material->shininess);
-	}
-	
+	////if (shader == lightingMaterial || shader == lightingTexture) {
+	////	Material* material = node->getMaterial();
+	////	shader->setVec3("material.ambient", material->ambient);
+	////	shader->setVec3("material.diffuse", material->diffuse);
+	////	shader->setVec3("material.specular", material->specular);
+	////	shader->setFloat("material.shininess", material->shininess);
+	////}
+	//
 
-	node->draw();
+	//node->draw();
 }
 
 // render nodes to depthMap
