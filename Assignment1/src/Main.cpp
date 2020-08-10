@@ -121,77 +121,7 @@ int main() {
     grid->setTexture(tileTexture);
     root->addChild(grid);
 
-    // student models
-    //Dan Raileanu
-    Model* model1 = new Model('N');
-    model1->scale(glm::vec3(2.0f, 2.0f, 2.0f));
-    model1->setMaterial(textureMaterial);
-    model1->setTexture(woodTexture);
-    model1->translate(glm::vec3(-45.0f, 0.0f, -45.0f));
-    root->addChild(model1);
-
-    Model* model2 = new Model('1');
-    model2->setMaterial(polishedGoldMaterial);
-    model2->scale(glm::vec3(2.0f, 2.0f, 2.0f));
-    model2->translate(glm::vec3(-35.0f, 0.0f, -45.0f));
-    root->addChild(model2);
-
-    //Mohamed-Yasser Houssein
-    Model* model3 = new Model('H');
-    model3->setMaterial(textureMaterial);
-    model3->setTexture(woodTexture);
-    model3->scale(glm::vec3(2.0f, 2.0f, 2.0f));
-    model3->translate(glm::vec3(35.0f, 0.0f, -45.0f));
-    root->addChild(model3);
-
-    Model* model4 = new Model('5');
-    model4->setMaterial(polishedGoldMaterial);
-    model4->scale(glm::vec3(2.0f, 2.0f, 2.0f));
-    model4->translate(glm::vec3(45.0f, 0.0f, -45.0f));
-    root->addChild(model4);
-
-    //Muherthan Thalayasingam
-    Model* model5 = new Model('H');
-    model5->setMaterial(textureMaterial);
-    model5->setTexture(woodTexture);
-    model5->scale(glm::vec3(2.0f, 2.0f, 2.0f));
-    model5->translate(glm::vec3(-45.0f, 0.0f, 45.0f));
-    root->addChild(model5);
-
-    Model* model6 = new Model('2');
-    model6->setMaterial(polishedGoldMaterial);
-    model6->scale(glm::vec3(2.0f, 2.0f, 2.0f));
-    model6->translate(glm::vec3(-35.0f, 0.0f, 45.0f));
-    root->addChild(model6);
-
-    //Radhep Sabapathipillai
-    Model* model7 = new Model('D');
-    model7->setMaterial(textureMaterial);
-    model7->setTexture(woodTexture);
-    model7->scale(glm::vec3(2.0f, 2.0f, 2.0f));
-    model7->translate(glm::vec3(35.0f, 0.0f, 45.0f));
-    root->addChild(model7);
-
-    Model* model8 = new Model('3');
-    model8->setMaterial(polishedGoldMaterial);
-    model8->scale(glm::vec3(2.0f, 2.0f, 2.0f));
-    model8->translate(glm::vec3(45.0f, 0.0f, 45.0f));
-    root->addChild(model8);
-
-    //Mohd Tanvir
-    Model* model9 = new Model('H');
-    model9->setMaterial(textureMaterial);
-    model9->setTexture(woodTexture);
-    model9->scale(glm::vec3(2.0f, 2.0f, 2.0f));
-    model9->translate(glm::vec3(-5.0f, 0.0f, -5.0f));
-    root->addChild(model9);
-
-    Model* model10 = new Model('1');
-    model10->setMaterial(polishedGoldMaterial);
-    model10->scale(glm::vec3(2.0f, 2.0f, 2.0f));
-    model10->translate(glm::vec3(5.0f, 0.0f, -5.0f));
-    root->addChild(model10);
-
+    
 
     
     //light source(s)
@@ -253,34 +183,34 @@ int main() {
 
         // select student models to transform
         if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
-            selectedNode = model1;
+            
         }
         if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
-            selectedNode = model2;
+            
         }
         if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
-            selectedNode = model3;
+            
         }
         if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) {
-            selectedNode = model4;
+            
         }
         if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) {
-            selectedNode = model5;
+            
         }
         if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS) {
-            selectedNode = model6;
+            
         }
         if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS) {
-            selectedNode = model7;
+            
         }
         if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS) {
-            selectedNode = model8;
+           
         }
         if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS) {
-            selectedNode = model9;
+            
         }
         if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS) {
-            selectedNode = model10;
+            
         }
         if (glfwGetKey(window, GLFW_KEY_BACKSPACE) == GLFW_PRESS) {
             selectedNode = lightNode;
