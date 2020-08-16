@@ -169,6 +169,7 @@
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Model.cpp" />
     <ClCompile Include="src\SceneNode.cpp" />
+    <ClCompile Include="src\SkyboxCube.cpp" />
     <ClCompile Include="src\Sphere.cpp" />
     <ClCompile Include="src\stb_image.cpp" />
   </ItemGroup>
@@ -182,9 +183,17 @@
     <None Include="shaders\shadow.fs" />
     <None Include="shaders\shadow.gs" />
     <None Include="shaders\shadow.vs" />
+    <None Include="shaders\skybox.fs" />
+    <None Include="shaders\skybox.vs" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\back.jpg" />
+    <Image Include="res\bottom.jpg" />
+    <Image Include="res\front.jpg" />
+    <Image Include="res\left.jpg" />
+    <Image Include="res\right.jpg" />
     <Image Include="res\tile.jpg" />
+    <Image Include="res\top.jpg" />
     <Image Include="res\wood.jpg" />
     <Image Include="textures\awesomeface.png" />
     <Image Include="textures\container.jpg" />
@@ -195,6 +204,7 @@
     <ClInclude Include="src\RubikCube.h" />
     <ClInclude Include="src\DrawNode.h" />
     <ClInclude Include="src\GroupNode.h" />
+    <ClInclude Include="src\SkyboxCube.h" />
     <ClInclude Include="src\Sphere.h" />
     <ClInclude Include="src\LightNode.h" />
     <ClInclude Include="src\Renderer.h" />

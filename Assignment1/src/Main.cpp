@@ -23,6 +23,7 @@
 #include "Camera.h"
 #include "Sphere.h"
 #include "RubikCube.h"
+#include "SkyboxCube.h"
 
 
 #include <iostream>
@@ -77,6 +78,7 @@ int main() {
     Shader lightingMaterialShader("shaders/lightingMaterial.vs", "shaders/lightingMaterial.fs");
     Shader lightingTextureShader("shaders/lightingTexture.vs", "shaders/lightingTexture.fs");
     Shader shadowShader("shaders/shadow.vs", "shaders/shadow.fs", "shaders/shadow.gs");
+    Shader skyboxShader("shaders/skybox.vs", "shaders/skybox.fs");
 
     // setup Renderer
     Renderer* renderer = new Renderer(mainCamera, &genericShader, &lightingMaterialShader, &lightingTextureShader, &shadowShader);
@@ -107,6 +109,20 @@ int main() {
     GLuint tileTexture = loadTexture("res/tile.jpg");
     GLuint woodTexture = loadTexture("res/wood.jpg");
 
+    //skybox textures and shaders. The textures were taken from https://github.com/JoeyDeVries/LearnOpenGL/tree/master/resources/textures/skybox
+    std::vector<std::string> faces{
+        "res/right.jpg",
+        "res/left.jpg",
+        "res/top.jpg",
+        "res/bottom.jpg",
+        "res/front.jpg",
+        "res/back.jpg"
+    };
+    unsigned int cubemapTexture = loadCubemap(faces);
+    DrawNode skyboxCube(new SkyboxCube);
+
+    skyboxShader.use();
+    skyboxShader.setInt("skybox", 2);
 
     //root, grid and axis lines
     GroupNode* root = new GroupNode;
@@ -485,6 +501,19 @@ int main() {
         // ------
         renderer->updateScene();
         renderer->render();
+
+        //render skybox. This should have been inside renderer, but had no time to implement it
+        glDepthFunc(GL_LEQUAL);
+        glm::mat4 view = glm::mat4(glm::mat3(mainCamera->GetViewMatrix()));
+        glm::mat4 projection = glm::perspective(glm::radians(mainCamera->Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
+        glm::mat4 VP = projection * view;
+        skyboxShader.use();
+        skyboxShader.setMat4("VP", VP);
+
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+
+        skyboxCube.draw();
 
         //displays FPS for debugging
         static int frames = 1;

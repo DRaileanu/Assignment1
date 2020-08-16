@@ -54,6 +54,9 @@
     <ClCompile Include="src\Quad.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\SkyboxCube.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\shadow.vs" />
@@ -65,6 +68,8 @@
     <None Include="shaders\lightingMaterial.fs" />
     <None Include="shaders\lightingTexture.fs" />
     <None Include="shaders\lightingTexture.vs" />
+    <None Include="shaders\skybox.vs" />
+    <None Include="shaders\skybox.fs" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="textures\awesomeface.png">
@@ -80,6 +85,24 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\wood.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\top.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\right.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\left.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\front.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\bottom.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\back.jpg">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
@@ -130,6 +153,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Quad.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SkyboxCube.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
