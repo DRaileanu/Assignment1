@@ -1,16 +1,13 @@
 #pragma once
-#include "GroupNode.h"
-#include "DrawNode.h"
-#include "Quad.h"
+#include "src/GroupNode.h"
+#include "src/DrawNode.h"
+#include "src/Model.h"
 
-class Timer : public GroupNode {
+class Timer: public GroupNode
+{
 public:
 	Timer();
 	~Timer() {};
-
-
-
-
-private:
-
+	Model* leftMinute;
 };
+

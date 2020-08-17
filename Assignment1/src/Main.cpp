@@ -23,6 +23,7 @@
 #include "Camera.h"
 #include "Sphere.h"
 #include "RubikCube.h"
+#include "../Timer.h"
 
 
 #include <iostream>
@@ -128,6 +129,10 @@ int main() {
     rubikCube->translate(glm::vec3(0.0f, 5.0f, 0.0f));
     root->addChild(rubikCube);
 
+    Timer* timer = new Timer;
+    timer->scale(glm::vec3(3.0f, 3.0f, 3.0f));
+    timer->translate(glm::vec3(0.0f, 7.0f, 0.0f));
+    root->addChild(timer);
 
     
     //light source(s)
