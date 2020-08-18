@@ -28,6 +28,7 @@ public:
 	RubikCube();
 	~RubikCube() {};
 
+	//methods to rotate faces of the Rubik Cube
 	void rotatePositiveXCW();
 	void rotatePositiveXCCW();
 	void rotateNegativeXCW();
@@ -44,16 +45,15 @@ public:
 	void rotateNegativeZCCW();
 
 protected:
-	void updateWorldTransform(const glm::mat4& CTM);
+	void updateWorldTransform(const glm::mat4& CTM) override;//override SceneNode method in order to call animationUpdate() during an animation
 
 private:
-	void animationUpdate();
+	void animationUpdate();//rotates/translates animationNodes during an animation
 
-	std::map<std::tuple<int, int, int>, GroupNode*> rubikParts;
+	std::map<std::tuple<int, int, int>, GroupNode*> rubikParts;//keeps track of the coordinates of the 26 mini-cubes of the RubikCube
 	bool animated;
-	std::vector<GroupNode*> animationNodes;
-	glm::vec3 animationRotation;
-	float animationStartTime;
-	float animationDuration;
+	std::vector<GroupNode*> animationNodes;//animationUpdate() needs to keep track of which mini-cubes are we animating
+	glm::vec3 animationRotation;//animationUpdate() needs to keep track of how are we animating
+	float animationDuration;//controls speed of animation
 };
 

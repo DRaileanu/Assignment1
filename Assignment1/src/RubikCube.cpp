@@ -143,15 +143,26 @@ RubikCube::RubikCube() {
 	addChild(rubikPart);
 
 
+
+
 	//setup the DrawNodes and Quads for all rubikParts
+	Drawable* blackQuad = new Quad;//provides the black interior of the cube. Essentially attached slightly towards the inside for every Quad in the RubikCube
+	blackQuad->setColours(glm::vec3(0.0f, 0.0f, 0.0f));
 	//all Quads facing towards +z, coordinates (x,y,1)
 	for (int x = 1; x <= 3; ++x) {
 		for (int y = 1; y <= 3; ++y) {
 			rubikPart = rubikParts[std::make_tuple(x, y, 1)];
+			DrawNode* quadNode;
+
 			Drawable* quad = new Quad;
 			quad->setColours(glm::vec3(1.0f, 0.0f, 0.0f));
-			DrawNode* quadNode = new DrawNode(quad);
+			quadNode = new DrawNode(quad);
 			quadNode->translate(glm::vec3(0.0f, 0.0f, 0.5f));
+			rubikPart->addChild(quadNode);
+
+			quadNode = new DrawNode(blackQuad);
+			quadNode->rotate(glm::vec3(0.0f, 180.0f, 0.0f));
+			quadNode->translate(glm::vec3(0.0f, 0.0f, 0.49f));
 			rubikPart->addChild(quadNode);
 		}
 	}
@@ -159,11 +170,17 @@ RubikCube::RubikCube() {
 	for (int x = 1; x <= 3; ++x) {
 		for (int y = 1; y <= 3; ++y) {
 			rubikPart = rubikParts[std::make_tuple(x, y, 3)];
+			DrawNode* quadNode;
+
 			Drawable* quad = new Quad;
 			quad->setColours(glm::vec3(1.0f, 1.0f, 0.0f));
-			DrawNode* quadNode = new DrawNode(quad);
+			quadNode = new DrawNode(quad);
 			quadNode->rotate(glm::vec3(0.0f, 180.0f, 0.0f));
 			quadNode->translate(glm::vec3(0.0f, 0.0f, -0.5f));
+			rubikPart->addChild(quadNode);
+
+			quadNode = new DrawNode(blackQuad);
+			quadNode->translate(glm::vec3(0.0f, 0.0f, -0.49f));
 			rubikPart->addChild(quadNode);
 		}
 	}
@@ -171,11 +188,18 @@ RubikCube::RubikCube() {
 	for (int y = 1; y <= 3; ++y) {
 		for (int z = 1; z <= 3; ++z) {
 			rubikPart = rubikParts[std::make_tuple(3, y, z)];
+			DrawNode* quadNode;
+
 			Drawable* quad = new Quad;
 			quad->setColours(glm::vec3(1.0f, 0.0f, 1.0f));
-			DrawNode* quadNode = new DrawNode(quad);
+			quadNode = new DrawNode(quad);
 			quadNode->rotate(glm::vec3(0.0f, 90.0f, 0.0f));
 			quadNode->translate(glm::vec3(0.5f, 0.0f, 0.0f));
+			rubikPart->addChild(quadNode);
+
+			quadNode = new DrawNode(blackQuad);
+			quadNode->rotate(glm::vec3(0.0f, -90.0f, 0.0f));
+			quadNode->translate(glm::vec3(0.49f, 0.0f, 0.0f));
 			rubikPart->addChild(quadNode);
 		}
 	}
@@ -183,11 +207,18 @@ RubikCube::RubikCube() {
 	for (int y = 1; y <= 3; ++y) {
 		for (int z = 1; z <= 3; ++z) {
 			rubikPart = rubikParts[std::make_tuple(1, y, z)];
+			DrawNode* quadNode;
+
 			Drawable* quad = new Quad;
 			quad->setColours(glm::vec3(0.0f, 1.0f, 0.0f));
-			DrawNode* quadNode = new DrawNode(quad);
+			quadNode = new DrawNode(quad);
 			quadNode->rotate(glm::vec3(0.0f, -90.0f, 0.0f));
 			quadNode->translate(glm::vec3(-0.5f, 0.0f, 0.0f));
+			rubikPart->addChild(quadNode);
+
+			quadNode = new DrawNode(blackQuad);
+			quadNode->rotate(glm::vec3(0.0f, 90.0f, 0.0f));
+			quadNode->translate(glm::vec3(-0.49f, 0.0f, 0.0f));
 			rubikPart->addChild(quadNode);
 		}
 	}
@@ -195,11 +226,18 @@ RubikCube::RubikCube() {
 	for (int x = 1; x <= 3; ++x) {
 		for (int z = 1; z <= 3; ++z) {
 			rubikPart = rubikParts[std::make_tuple(x, 3, z)];
+			DrawNode* quadNode;
+
 			Drawable* quad = new Quad;
 			quad->setColours(glm::vec3(0.0f, 1.0f, 1.0f));
-			DrawNode* quadNode = new DrawNode(quad);
+			quadNode = new DrawNode(quad);
 			quadNode->rotate(glm::vec3(-90.0f, 0.0f, 0.0f));
 			quadNode->translate(glm::vec3(0.0f, 0.5f, 0.0f));
+			rubikPart->addChild(quadNode);
+
+			quadNode = new DrawNode(blackQuad);
+			quadNode->rotate(glm::vec3(90.0f, 0.0f, 0.0f));
+			quadNode->translate(glm::vec3(0.0f, 0.49f, 0.0f));
 			rubikPart->addChild(quadNode);
 		}
 	}
@@ -207,11 +245,18 @@ RubikCube::RubikCube() {
 	for (int x = 1; x <= 3; ++x) {
 		for (int z = 1; z <= 3; ++z) {
 			rubikPart = rubikParts[std::make_tuple(x, 1, z)];
+			DrawNode* quadNode;
+
 			Drawable* quad = new Quad;
 			quad->setColours(glm::vec3(0.0f, 0.0f, 1.0f));
-			DrawNode* quadNode = new DrawNode(quad);
+			quadNode = new DrawNode(quad);
 			quadNode->rotate(glm::vec3(90.0f, 0.0f, 0.0f));
 			quadNode->translate(glm::vec3(0.0f, -0.5f, 0.0f));
+			rubikPart->addChild(quadNode);
+
+			quadNode = new DrawNode(blackQuad);
+			quadNode->rotate(glm::vec3(-90.0f, 0.0f, 0.0f));
+			quadNode->translate(glm::vec3(0.0f, -0.49f, 0.0f));
 			rubikPart->addChild(quadNode);
 		}
 	}
@@ -228,12 +273,17 @@ void RubikCube::updateWorldTransform(const glm::mat4& CTM) {
 	SceneNode::updateWorldTransform(CTM);
 }
 
+
+/*
+	Handles animation by updating the animationNodes using the animationRotation
+	Updates propertionally to how much time passed since last update divided by animationDuration
+*/
 void RubikCube::animationUpdate() {
 	static bool animationInProgress = false;
 	static float animationStartFrame = glfwGetTime();
 	static float lastFrame = glfwGetTime();
 	
-	if (!animationInProgress) {
+	if (!animationInProgress) {//first time function is called, we simply mark that we are going to start animation starting from next frame
 		animationInProgress = true;
 		lastFrame = animationStartFrame = glfwGetTime();
 	}
@@ -241,7 +291,7 @@ void RubikCube::animationUpdate() {
 		float currentFrame = glfwGetTime();
 		float dt;
 
-		if (animationStartFrame + animationDuration <= currentFrame) {
+		if (animationStartFrame + animationDuration <= currentFrame) {//if time elapsed since start of animation is longer than animationDuration, we manually set dt so that we don't overshot the rotation
 			dt = animationStartFrame + animationDuration - lastFrame;
 			animationInProgress = false;
 			animated = false;
@@ -252,17 +302,18 @@ void RubikCube::animationUpdate() {
 		lastFrame = currentFrame;
 
 
+		//update all animationNodes
 		glm::vec3 deltaRotation = (dt / animationDuration) * animationRotation;
 		glm::quat rotationQuaternion(glm::radians(deltaRotation));
 		glm::mat4 rotationMatrix = glm::mat4_cast(rotationQuaternion);
 		for (auto& animNode : animationNodes) {
-			animNode->rotate(rotationMatrix);
+			animNode->rotate(rotationMatrix);//rotates the mini-cube relative to it's own center
+			//because all mini-cubes are translated relative to the center of the cube, rotating the translation matrix results in rotating about the RubikCube axes
 			glm::vec3 translation = animNode->getTranslation();
 			glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), translation);
 			glm::mat4 rotatedTranslationMatrix = rotationMatrix * translationMatrix;
 			glm::vec3 rotatedTranslation = glm::vec3(rotatedTranslationMatrix[3]);
 			animNode->setTranslation(rotatedTranslation);
-
 		}
 		
 		
@@ -288,13 +339,17 @@ void RubikCube::animationUpdate() {
 
 }
 
+
+
+//Methods to setup the animation for RubikCube. They place the appropriate RubikParts inside animatedNodes and update the RubikParts coordinates to how they will look like after animation is complete
+
 void RubikCube::rotatePositiveXCW() {
-	if (!animated) {
+	if (!animated) {//only do the setup when called without any animation in progress
 		animated = true;
-		animationStartTime = glfwGetTime();
 
 		animationNodes.clear();
 		std::map<std::tuple<int, int, int>, GroupNode*> temp;
+		//fill the animationNodes and get a copy of all nodes inside temp to do the swapping after
 		for (int y = 1; y <= 3; ++y) {
 			for (int z = 1; z <= 3; ++z) {
 				std::tuple<int,int,int> coord(3, y, z);
@@ -321,7 +376,6 @@ void RubikCube::rotatePositiveXCW() {
 void RubikCube::rotatePositiveXCCW() {
 	if (!animated) {
 		animated = true;
-		animationStartTime = glfwGetTime();
 
 		animationNodes.clear();
 		std::map<std::tuple<int, int, int>, GroupNode*> temp;
@@ -350,7 +404,6 @@ void RubikCube::rotatePositiveXCCW() {
 void RubikCube::rotateNegativeXCW() {
 	if (!animated) {
 		animated = true;
-		animationStartTime = glfwGetTime();
 
 		animationNodes.clear();
 		std::map<std::tuple<int, int, int>, GroupNode*> temp;
@@ -379,7 +432,6 @@ void RubikCube::rotateNegativeXCW() {
 void RubikCube::rotateNegativeXCCW() {
 	if (!animated) {
 		animated = true;
-		animationStartTime = glfwGetTime();
 
 		animationNodes.clear();
 		std::map<std::tuple<int, int, int>, GroupNode*> temp;
@@ -408,7 +460,6 @@ void RubikCube::rotateNegativeXCCW() {
 void RubikCube::rotatePositiveYCW() {
 	if (!animated) {
 		animated = true;
-		animationStartTime = glfwGetTime();
 
 		animationNodes.clear();
 		std::map<std::tuple<int, int, int>, GroupNode*> temp;
@@ -437,7 +488,6 @@ void RubikCube::rotatePositiveYCW() {
 void RubikCube::rotatePositiveYCCW() {
 	if (!animated) {
 		animated = true;
-		animationStartTime = glfwGetTime();
 
 		animationNodes.clear();
 		std::map<std::tuple<int, int, int>, GroupNode*> temp;
@@ -466,7 +516,6 @@ void RubikCube::rotatePositiveYCCW() {
 void RubikCube::rotateNegativeYCW() {
 	if (!animated) {
 		animated = true;
-		animationStartTime = glfwGetTime();
 
 		animationNodes.clear();
 		std::map<std::tuple<int, int, int>, GroupNode*> temp;
@@ -495,7 +544,6 @@ void RubikCube::rotateNegativeYCW() {
 void RubikCube::rotateNegativeYCCW() {
 	if (!animated) {
 		animated = true;
-		animationStartTime = glfwGetTime();
 
 		animationNodes.clear();
 		std::map<std::tuple<int, int, int>, GroupNode*> temp;
@@ -524,7 +572,6 @@ void RubikCube::rotateNegativeYCCW() {
 void RubikCube::rotatePositiveZCW() {
 	if (!animated) {
 		animated = true;
-		animationStartTime = glfwGetTime();
 
 		animationNodes.clear();
 		std::map<std::tuple<int, int, int>, GroupNode*> temp;
@@ -553,7 +600,6 @@ void RubikCube::rotatePositiveZCW() {
 void RubikCube::rotatePositiveZCCW() {
 	if (!animated) {
 		animated = true;
-		animationStartTime = glfwGetTime();
 
 		animationNodes.clear();
 		std::map<std::tuple<int, int, int>, GroupNode*> temp;
@@ -582,7 +628,6 @@ void RubikCube::rotatePositiveZCCW() {
 void RubikCube::rotateNegativeZCW() {
 	if (!animated) {
 		animated = true;
-		animationStartTime = glfwGetTime();
 
 		animationNodes.clear();
 		std::map<std::tuple<int, int, int>, GroupNode*> temp;
@@ -611,7 +656,6 @@ void RubikCube::rotateNegativeZCW() {
 void RubikCube::rotateNegativeZCCW() {
 	if (!animated) {
 		animated = true;
- 		animationStartTime = glfwGetTime();
 
 		animationNodes.clear();
 		std::map<std::tuple<int, int, int>, GroupNode*> temp;
