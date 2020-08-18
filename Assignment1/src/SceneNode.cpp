@@ -75,16 +75,19 @@ void SceneNode::rotate(glm::vec3 r) {
 
 	glm::vec3 angles = glm::vec3(glm::radians(r.x), glm::radians(r.y), glm::radians(r.z));
 	glm::quat rot(angles);
+	rot = glm::normalize(rot);
+
 	glm::mat4 rotMat = glm::mat4_cast(rot);
 	glm::mat4 quatRotMat = glm::mat4_cast(quatrotation);
 	glm::mat4 transform = quatRotMat * rotMat;
-	quatrotation = glm::quat_cast(transform);
+	quatrotation = glm::normalize(glm::quat_cast(transform));
 }
 
 void SceneNode::rotate(glm::mat4 rotationMatrix) {
 	glm::mat4 quatRotMat = glm::mat4_cast(quatrotation);
 	glm::mat4 transform = rotationMatrix * quatRotMat ;
-	quatrotation = glm::quat_cast(transform);
+	quatrotation = glm::normalize(glm::quat_cast(transform));
+
 }
 
 void SceneNode::moveForward(float amount) {

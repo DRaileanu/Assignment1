@@ -154,7 +154,7 @@ int main() {
     //root of the Scene
     renderer->setRootSceneNode(root);
     //default selected node to transform
-    SceneNode* selectedNode = lightNode;
+    SceneNode* selectedNode = rubikCube;
     
 
     //------------------------------------------------------------------------------
@@ -189,37 +189,40 @@ int main() {
 
         // select student models to transform
         if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
-            selectedNode = rubikCube;
+            rubikCube->rotatePositiveXCW();
         }
         if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
-            selectedNode = axisLines;
+            rubikCube->rotatePositiveXCCW();
         }
         if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
-            
+            rubikCube->rotateNegativeXCW();
         }
         if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) {
-            
+            rubikCube->rotateNegativeXCCW();
         }
         if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) {
-            
+            rubikCube->rotatePositiveYCW();
         }
         if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS) {
-            
+            rubikCube->rotatePositiveYCCW();
         }
         if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS) {
-            
+            rubikCube->rotateNegativeYCW();
         }
         if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS) {
-           
+            rubikCube->rotateNegativeYCCW();
         }
         if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS) {
-            
+            rubikCube->rotatePositiveZCW();
         }
         if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS) {
-            
+            rubikCube->rotatePositiveZCCW();
         }
-        if (glfwGetKey(window, GLFW_KEY_BACKSPACE) == GLFW_PRESS) {
-            selectedNode = lightNode;
+        if (glfwGetKey(window, GLFW_KEY_MINUS) == GLFW_PRESS) {
+            rubikCube->rotateNegativeZCW();
+        }
+        if (glfwGetKey(window, GLFW_KEY_EQUAL) == GLFW_PRESS) {
+            rubikCube->rotateNegativeZCCW();
         }
  
 
