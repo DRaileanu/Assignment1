@@ -16,10 +16,8 @@
 #include <glm/gtx/euler_angles.hpp>
 #include <glm/gtx/norm.hpp>
 
-ParticleEffect::ParticleEffect(unsigned int numParticles)
-    : m_pCamera(NULL)
-    , m_pParticleEmitter(NULL)
-    , m_LocalToWorldMatrix(1)
+ParticleEffect::ParticleEffect(unsigned int numParticles) :
+    m_pParticleEmitter(NULL)
     //, m_Force(0, -9.81f, 0)
 {
     Resize(numParticles);
@@ -28,10 +26,6 @@ ParticleEffect::ParticleEffect(unsigned int numParticles)
 
 ParticleEffect::~ParticleEffect() {}
 
-void ParticleEffect::SetCamera(Camera* pCamera)
-{
-    m_pCamera = pCamera;
-}
 
 void ParticleEffect::SetParticleEmitter(ParticleEmitter* pEmitter)
 {
@@ -84,15 +78,6 @@ void ParticleEffect::BuildVertexBuffer()
     const glm::vec3 X(0.5, 0, 0);
     const glm::vec3 Y(0, 0.5, 0);
     const glm::vec3 Z(0, 0, 0.5);
-
-    glm::quat cameraRotation;
-
-    if (m_pCamera != NULL)
-    {
-        //cameraRotation = glm::quat(glm::radians(m_pCamera->GetRotation()));
-        cameraRotation = glm::quat(glm::radians(glm::vec3(m_pCamera->Pitch, 90 + m_pCamera->Yaw, 0.0f)));
-    }
-
 
 
     for (unsigned int i = 0; i < m_Particles.size(); ++i)
@@ -213,39 +198,6 @@ void ParticleEffect::Update(float fDeltaTime)
 }
 
 
-/*
-void ParticleEffect::Render()
-{
-    glDisable(GL_DEPTH_TEST);           // Disables Depth Testing
-    glEnable(GL_BLEND);                 // Enable Blending
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);   // Type Of Blending To Perform
-    glEnable(GL_TEXTURE_2D);            // Enable textures
-
-    glPushMatrix();
-    glMultMatrixf(glm::value_ptr(m_LocalToWorldMatrix));
-
-    glBindTexture(GL_TEXTURE_2D, m_TextureID);
-
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-    glEnableClientState(GL_COLOR_ARRAY);
-
-    glVertexPointer(3, GL_FLOAT, sizeof(Vertex), &(m_VertexBuffer[0].m_Pos));
-    glColorPointer(4, GL_FLOAT, sizeof(Vertex), &(m_VertexBuffer[0].m_Diffuse));
-
-    glDrawArrays(GL_QUADS, 0, m_VertexBuffer.size());
-
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-    glDisableClientState(GL_COLOR_ARRAY);
-
-    glBindTexture(GL_TEXTURE_2D, 0);
-
-
-    glPopMatrix();
-
-}
-*/
 
 void ParticleEffect::Resize(unsigned int numParticles)
 {
@@ -279,15 +231,3 @@ void ParticleEffect::setupBufferData() {
     glBindVertexArray(0);
 }
 
-/*
-void ParticleEffect::draw() {
-    GLboolean cullFaceState;
-    glGetBooleanv(GL_CULL_FACE, &cullFaceState);
-    glDisable(GL_CULL_FACE);
-    glDisable(GL_DEPTH_TEST);           // Disables Depth Testing
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    Drawable::draw();
-    glCullFace(cullFaceState);
-    glEnable(GL_DEPTH_TEST);
-}
-*/

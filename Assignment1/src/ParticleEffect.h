@@ -9,8 +9,9 @@
 
 
 /**
- * ParticleEffect class that demonstrates one possible implementation for
- * billboard particles.
+ * ParticleEffect class that sets up, updates and renders  particles.
+ * The general approach and some code was inspired from https://www.3dgep.com/simulating-particle-effects-using-opengl/#Taking_full_advantage_of_the_power_of_the_GPU
+ * Although particles are normally made using billboard quads, these particles will be rotated/translated around as a 3d object, hence they are modeled as cubes.
  */
 
 class ParticleEffect : public Drawable {
@@ -19,9 +20,6 @@ public:
     ParticleEffect(unsigned int numParticles = 0);
     virtual ~ParticleEffect();
 
-    //void draw();
-
-    void SetCamera(Camera* pCamera);
     void SetParticleEmitter(ParticleEmitter* pEmitter);
 
     // Test method to randomize the particles in an interesting way
@@ -41,12 +39,9 @@ public:
     // Build the vertex buffer from the particle buffer
     void BuildVertexBuffer();
 private:
-    Camera* m_pCamera;
     ParticleEmitter* m_pParticleEmitter;
 
     std::vector<Particle>      m_Particles;
-    glm::mat4x4         m_LocalToWorldMatrix;
-
     // Apply this force to every particle in the effect
     //glm::vec3           m_Force;
 };
