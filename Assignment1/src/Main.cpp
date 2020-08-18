@@ -23,6 +23,7 @@
 #include "Camera.h"
 #include "Sphere.h"
 #include "RubikCube.h"
+#include "ParticleEffect.h"
 
 
 #include <iostream>
@@ -111,6 +112,19 @@ int main() {
     //root, grid and axis lines
     GroupNode* root = new GroupNode;
 
+
+    ParticleEmitter* particleEmitter = new ParticleEmitter;
+    ParticleEffect* particleEffect = new ParticleEffect(50);
+    //particleEffect->SetParticleEmitter(particleEmitter);
+    particleEffect->SetCamera(mainCamera);
+    DrawNode* particles = new DrawNode(particleEffect);
+    particles->translate(glm::vec3(0.0f, 15.0f, 0.0f));
+    root->addChild(particles);
+
+
+
+
+
     DrawNode* axisLines = new DrawNode(new AxisLines);
     axisLines->translate(glm::vec3(0.0f, 0.01, 0.0f));
     axisLines->scale(glm::vec3(5.0f, 5.0f, 5.0f));
@@ -154,7 +168,8 @@ int main() {
     //root of the Scene
     renderer->setRootSceneNode(root);
     //default selected node to transform
-    SceneNode* selectedNode = rubikCube;
+    SceneNode* selectedNode = particles;
+
     
 
     //------------------------------------------------------------------------------
@@ -166,6 +181,8 @@ int main() {
         // update frame time parameters
         float dt = glfwGetTime() - lastFrame;
         lastFrame += dt;
+
+        particleEffect->Update(dt);
 
         // keyboard input handling
         // --------------
