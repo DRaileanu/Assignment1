@@ -385,11 +385,11 @@ int main() {
         }
         //move up continously (+y direction)
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_RELEASE) {
-            selectedNode->translate(glm::vec3(0.0f, 25 * dt, 0.0f));
+            selectedNode->moveUp(25 * dt);
         }
         //move down continously (-y direction)
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_RELEASE) {
-            selectedNode->translate(glm::vec3(0.0f, -25 * dt, 0.0f));
+            selectedNode->moveDown(25 * dt);
         }
         //rotate left continously(counter-clockwise around y-axis)
         if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_RELEASE) {

@@ -100,30 +100,32 @@ void SceneNode::rotate(glm::mat4 rotationMatrix) {
 
 void SceneNode::moveForward(float amount) {
 	dirty = true;
-	glm::mat4 trans = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -amount));
-	glm::mat4 rot = glm::rotate(glm::mat4(1.0f), glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-	translation += glm::vec3((rot * trans)[3]);
+	translation += quatrotation * glm::vec3(0.0f, 0.0f, -amount);
 }
 void SceneNode::moveBackwards(float amount) {
 	dirty = true;
-	glm::mat4 trans = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, amount));
-	glm::mat4 rot = glm::rotate(glm::mat4(1.0f), glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-	translation += glm::vec3((rot * trans)[3]);
+	translation += quatrotation * glm::vec3(0.0f, 0.0f, amount);
 }
 
 void SceneNode::strafeLeft(float amount) {
 	dirty = true;
-	glm::mat4 trans = glm::translate(glm::mat4(1.0f), glm::vec3(-amount, 0.0f, 0.0f));
-	glm::mat4 rot = glm::rotate(glm::mat4(1.0f), glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-	translation += glm::vec3((rot * trans)[3]);
+	translation += quatrotation * glm::vec3(-amount, 0.0f, 0.0f);
 
 }
 
 void SceneNode::strafeRight(float amount) {
 	dirty = true;
-	glm::mat4 trans = glm::translate(glm::mat4(1.0f), glm::vec3(amount, 0.0f, 0.0f));
-	glm::mat4 rot = glm::rotate(glm::mat4(1.0f), glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-	translation += glm::vec3((rot * trans)[3]);
+	translation += quatrotation * glm::vec3(amount, 0.0f, 0.0f);
 
+}
+
+void SceneNode::moveDown(float amount) {
+	dirty = true;
+	translation += quatrotation * glm::vec3(0.0f, -amount, 0.0f);
+}
+
+void SceneNode::moveUp(float amount) {
+	dirty = true;
+	translation += quatrotation * glm::vec3(0.0f, amount, 0.0f);
 }
 

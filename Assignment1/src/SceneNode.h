@@ -36,9 +36,11 @@ public:
 	void rotate(glm::mat4);//input is a rotaiton Matrix to apply to current one;
 	
 	void moveForward(float amount);//move in -z direction relative to local axis
-	void moveBackwards(float amount);//move in z direction relative to local axis
+	void moveBackwards(float amount);//move in +z direction relative to local axis
 	void strafeLeft(float amount);//move in -x direction relative to local axis
-	void strafeRight(float amount);//move in x direction relative to local axis
+	void strafeRight(float amount);//move in +x direction relative to local axis
+	void moveDown(float amount);//move in -y direction relative to local axis
+	void moveUp(float amount);//move in +y direction relative to local axis
 
 	//update node. By default just calls updateWorldTransform, but classes that inherit can use dt to do more complex updates
 	virtual void update(const glm::mat4& CTM, float dt);
