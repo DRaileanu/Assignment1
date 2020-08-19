@@ -193,6 +193,8 @@
     <Image Include="textures\kappa.png" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\RubikCubeParticles.h" />
+    <ClInclude Include="src\RubikCubeColors.h" />
     <ClInclude Include="src\ParticleEffect.h" />
     <ClInclude Include="src\Particle.h" />
     <ClInclude Include="src\ParticleEmitter.h" />

@@ -22,7 +22,8 @@
 #include "Renderer.h"
 #include "Camera.h"
 #include "Sphere.h"
-#include "RubikCube.h"
+#include "RubikCubeColors.h"
+#include "RubikCubeParticles.h"
 #include "ParticleEffect.h"
 
 
@@ -114,30 +115,30 @@ int main() {
 
 
     ParticleEmitter* particleEmitter = new ParticleEmitter;
-    particleEmitter->MaxWidth = 1.0f;
-    particleEmitter->MinWidth = -1.0f;
-    particleEmitter->MaxHeight = 3.0f;
-    particleEmitter->MinHeight = 0.1f;
-    particleEmitter->MaxDepth = 1.0f;
-    particleEmitter->MinDepth = -1.0f;
-    particleEmitter->MaxSpeed = 25.5;
-    particleEmitter->MinSpeed = 15.8;
-    particleEmitter->MaxLifetime = 1;
-    particleEmitter->MinLifetime = 3;
+    particleEmitter->MaxWidth = 0.25f;
+    particleEmitter->MinWidth = -0.25f;
+    particleEmitter->MaxHeight = 0.5f;
+    particleEmitter->MinHeight = 0.0f;
+    particleEmitter->MaxDepth = 0.1f;
+    particleEmitter->MinDepth = -0.1f;
+    particleEmitter->MaxSpeed = 2.5;
+    particleEmitter->MinSpeed = 0.8;
+    particleEmitter->MaxLifetime = 0.25;
+    particleEmitter->MinLifetime = 0.75;
     
 
 
-    ParticleEffect* particleEffect = new ParticleEffect(1000);
-    particleEffect->setForce(glm::vec3(0.0f, -30.0, 0.0f));
+    ParticleEffect* particleEffect = new ParticleEffect(300);
+    //particleEffect->setForce(glm::vec3(0.0f, -30.0, 0.0f));
     particleEffect->setRotateAxis(glm::vec3(0.25, 0.5, 0.75));
     particleEffect->setRotateKeyFrames(0.0f, 90.0f);
-    particleEffect->setSizeKeyFrames(0.35, 0.15);
-    particleEffect->setColorKeyFrames(glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 0.0f));
+    particleEffect->setSizeKeyFrames(0.050, 0.025);
+    particleEffect->setColorKeyFrames(glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
     particleEffect->SetParticleEmitter(particleEmitter);
     DrawNode* particles = new DrawNode(particleEffect);
     particles->translate(glm::vec3(0.0f, 10.0f, 0.0f));
-    root->addChild(particles);
+    //root->addChild(particles);
 
     /*
     DrawNode* particles1 = new DrawNode(particleEffect);
@@ -170,7 +171,7 @@ int main() {
     root->addChild(grid);
 
     
-    RubikCube* rubikCube = new RubikCube;
+    RubikCube* rubikCube = new RubikCubeParticles;
     rubikCube->scale(glm::vec3(3.0f, 3.0f, 3.0f));
     rubikCube->translate(glm::vec3(0.0f, 5.0f, 0.0f));
     root->addChild(rubikCube);
@@ -201,7 +202,7 @@ int main() {
     //root of the Scene
     renderer->setRootSceneNode(root);
     //default selected node to transform
-    SceneNode* selectedNode = particles;
+    SceneNode* selectedNode = rubikCube;
 
     
 
@@ -215,7 +216,7 @@ int main() {
         float dt = glfwGetTime() - lastFrame;
         lastFrame += dt;
 
-        particleEffect->Update(dt);
+        //particleEffect->Update(dt);
 
         // keyboard input handling
         // --------------
@@ -536,7 +537,7 @@ int main() {
 
         // render
         // ------
-        renderer->updateScene();
+        renderer->updateScene(dt);
         renderer->render();
 
         //displays FPS for debugging
