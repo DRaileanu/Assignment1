@@ -118,10 +118,10 @@ void Renderer::render() {
 
 			//render scene into depthCubeMap
 			glEnable(GL_CULL_FACE);
-			for (auto& node : genericDraws) {
-				shadowShader->setMat4("model", node->getWorldTransform());
-				node->draw();
-			}
+			//for (auto& node : genericDraws) {
+			//	shadowShader->setMat4("model", node->getWorldTransform());
+			//	node->draw();
+			//}
 			for (auto& node : opaqueTexDraws) {
 				shadowShader->setMat4("model", node->getWorldTransform());
 				node->draw();
@@ -307,18 +307,18 @@ void Renderer::render() {
 	lights.clear();
 }
 
-void Renderer::updateScene() {
+void Renderer::updateScene(float dt) {
 	if (!rootSceneNode) {
 		return;
 	}
-	updateNode(rootSceneNode, glm::mat4(1.0f));
+	updateNode(rootSceneNode, glm::mat4(1.0f), dt);
 }
 
 
 // update SceneGraph and collect DrawNodes to be rendered
 // TODO instead of dynamic_cast, implement visitor pattern
-void Renderer::updateNode(SceneNode* node, const glm::mat4& CTM) {
-	node->updateWorldTransform(CTM);
+void Renderer::updateNode(SceneNode* node, const glm::mat4& CTM, float dt) {
+	node->update(CTM, dt);
 
 	if (DrawNode* drawNode = dynamic_cast<DrawNode*>(node)) {
 		if (drawNode->getTransparency() > 0.0f) {
@@ -345,7 +345,7 @@ void Renderer::updateNode(SceneNode* node, const glm::mat4& CTM) {
 
 	else if (GroupNode* groupNode = dynamic_cast<GroupNode*>(node)) {
 		for (auto& child : groupNode->getChildren()) {
-			updateNode(child, node->getWorldTransform());
+			updateNode(child, node->getWorldTransform(), dt);
 		}
 	}
 }

@@ -33,7 +33,7 @@ public:
 	Renderer(Camera* camera, Shader* genericShader, Shader* lightingMaterialShader, Shader* lightingTextureShader, Shader* shadowShader);
 	~Renderer();
 
-	void updateScene();//makes first call to updateNode() that updates worldTransform for all nodes under rootSceneNode and sorts all DrawNodes into appropriate vectors for later future draw calls
+	void updateScene(float dt);//makes first call to updateNode() that updates worldTransform for all nodes under rootSceneNode and sorts all DrawNodes into appropriate vectors for later future draw calls
 	void render();
 
 	void setRootSceneNode(GroupNode* node) { rootSceneNode = node; }
@@ -77,7 +77,7 @@ private:
 	GLuint depthCubeMap = 0;//cube depth map texture to hold info for shadow maping Point Lights
 
 
-	void updateNode(SceneNode* node, const glm::mat4& CTM);//recursively updates worldTransforms in Scene and sorts into containers
+	void updateNode(SceneNode* node, const glm::mat4& CTM, float dt);//recursively updates worldTransforms in Scene and sorts into containers
 	
 
 };

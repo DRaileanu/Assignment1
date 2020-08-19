@@ -25,8 +25,10 @@
 
 class RubikCube : public GroupNode{
 public:
-	RubikCube();
+	//RubikCube();
 	~RubikCube() {};
+
+	virtual void setupDrawNodes() = 0;
 
 	//methods to rotate faces of the Rubik Cube
 	void rotatePositiveXCW();
@@ -45,9 +47,8 @@ public:
 	void rotateNegativeZCCW();
 
 protected:
-	void updateWorldTransform(const glm::mat4& CTM) override;//override SceneNode method in order to call animationUpdate() during an animation
-
-private:
+	RubikCube();
+	virtual void update(const glm::mat4& CTM, float dt) override;//override SceneNode method in order to call animationUpdate() during an animation
 	void animationUpdate();//rotates/translates animationNodes during an animation
 
 	std::map<std::tuple<int, int, int>, GroupNode*> rubikParts;//keeps track of the coordinates of the 26 mini-cubes of the RubikCube

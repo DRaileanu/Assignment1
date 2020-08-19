@@ -28,6 +28,10 @@ void SceneNode::updateLocalTransform() {
 
 }
 
+void SceneNode::update(const glm::mat4& CTM, float dt) {
+	updateWorldTransform(CTM);
+}
+
 // recursively update scene node's world transform relative to parent's
 void SceneNode::updateWorldTransform(const glm::mat4& CTM) {
 	if (dirty) {//replace dirty with true to see FPS difference

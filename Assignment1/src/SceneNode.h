@@ -40,24 +40,24 @@ public:
 	void strafeLeft(float amount);//move in -x direction relative to local axis
 	void strafeRight(float amount);//move in x direction relative to local axis
 
+	//update node. By default just calls updateWorldTransform, but classes that inherit can use dt to do more complex updates
+	virtual void update(const glm::mat4& CTM, float dt);
 
-	//worldTransformation
-	const glm::mat4& getWorldTransform() { return worldTransform; }
-	virtual void updateWorldTransform(const glm::mat4& CTM);
+	const glm::mat4& getWorldTransform() { return worldTransform; }//can be used to get translation in world space from last column
 
 	bool isDirty() { return dirty; }//optimization to avoid recomputing localTransform if hasn't changed since last frame
 	
-	glm::quat	quatrotation;
 protected:
 	SceneNode();//not allowed to instantiate SceneNode on their own, must be a derived class
 	virtual void updateLocalTransform();
+	void updateWorldTransform(const glm::mat4& CTM);
 
 	glm::mat4	worldTransform;
 	glm::mat4	localTransform;
 
 	glm::vec3	translation;
 	glm::vec3	rotation;
-	//glm::quat	quatrotation;
+	glm::quat	quatrotation;
 	glm::vec3	scaling;
 	glm::mat4	manualTransform;
 
