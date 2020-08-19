@@ -20,6 +20,7 @@ void SceneNode::updateLocalTransform() {
 	//transform = glm::rotate(transform, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
 	//transform = glm::rotate(transform, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
 	//transform = glm::rotate(transform, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+	
 	glm::mat4 rotTransform = glm::mat4_cast(quatrotation);
 	transform = transform * rotTransform;
 	transform = glm::scale(transform, scaling);
@@ -83,8 +84,9 @@ void SceneNode::rotate(glm::vec3 r) {
 
 	glm::mat4 rotMat = glm::mat4_cast(rot);
 	glm::mat4 quatRotMat = glm::mat4_cast(quatrotation);
-	glm::mat4 transform = rotMat * quatRotMat;
+	glm::mat4 transform = quatRotMat * rotMat;
 	quatrotation = glm::normalize(glm::quat_cast(transform));
+
 }
 
 void SceneNode::rotate(glm::mat4 rotationMatrix) {

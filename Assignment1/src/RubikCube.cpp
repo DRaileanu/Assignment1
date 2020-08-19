@@ -187,9 +187,9 @@ void RubikCube::animationUpdate() {
 		glm::vec3 deltaRotation = (dt / animationDuration) * animationRotation;
 		glm::quat rotationQuaternion(glm::radians(deltaRotation));
 		rotationQuaternion = glm::normalize(rotationQuaternion);
-		//glm::mat4 rotationMatrix = glm::mat4_cast(rotationQuaternion);
+		glm::mat4 rotationMatrix = glm::mat4_cast(rotationQuaternion);
 		for (auto& animNode : animationNodes) {
-			animNode->rotate(deltaRotation);//rotates the mini-cube relative to it's own center
+			animNode->rotate(rotationMatrix);//rotates the mini-cube relative to it's own center
 			//because all mini-cubes are translated relative to the center of the cube, rotating the translation matrix results in rotating about the RubikCube axes
 			glm::vec3 translation = animNode->getTranslation();
 			//glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), translation);
