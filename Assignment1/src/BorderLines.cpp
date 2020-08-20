@@ -58,7 +58,7 @@ void BorderLines::createRight() {
 
 	node = new DrawNode(cube);
 	node->scale(glm::vec3(4.0f, 0.1, 1.0f));
-	node->translate(glm::vec3(0.0f, 3.0f, 0.0f));
+	node->translate(glm::vec3(0.0f, 2.5f, 0.0f));
 	bottomPart->addChild(node);
 
 
@@ -69,7 +69,7 @@ void BorderLines::createLeft() {
 
 	node = new DrawNode(cube);
 	node->scale(glm::vec3(4.0f, 0.1, 1.0f));
-	node->translate(glm::vec3(0.0f, -3.0f, 0.0f));
+	node->translate(glm::vec3(0.0f, -2.5f, 0.0f));
 	bottomPart->addChild(node);
 
 }
@@ -148,18 +148,18 @@ void BorderLines::scaleTop(float scale) {
 
 void BorderLines::moveSideToSide(float dt) {
 	if (firsti) {
-		i = 100;
+		i = 66;
 		firsti = false;
 	}
 
 	i++;
-	if (i < 150) {
+	if (i < 100) {
 		this->strafeLeft(25 * dt);
 	}
 	else {
 
 		j++;
-		if (j < 150) {
+		if (j < 100) {
 			
 			this->strafeRight(25 * dt);
 
@@ -174,18 +174,18 @@ void BorderLines::moveSideToSide(float dt) {
 
 void BorderLines::moveSideToSide2(float dt) {
 	if (firstx) {
-		i = 100;
+		i = 66;
 		firstx = false;
 	}
 
 	i++;
-	if (i < 150) {
+	if (i < 100) {
 		this->strafeRight(25 * dt);
 	}
 	else {
 
 		j++;
-		if (j < 150) {
+		if (j < 100) {
 
 			this->strafeLeft(25 * dt);
 
