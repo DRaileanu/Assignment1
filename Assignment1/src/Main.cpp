@@ -340,16 +340,20 @@ int main() {
         }
 
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-            std::cout <<"in here";
-            timer->start();
             unsigned long seconds = 10;
-            std::cout << "timer started . . ." << std::endl;
+            unsigned long currentTime =0;
+            std::cout << "time about to start";
+            timer->start();
             while (true) {
+                if (timer->elapsedTime() > currentTime) {
+                    std::cout<<currentTime<<std::endl;
+                    currentTime = timer->elapsedTime();
+                }
                 if (timer->elapsedTime() >= seconds) {
                     break;
                 }
                 else {
-                    // do other things
+           
                 }
             }
             std::cout << seconds << " seconds elapsed" << std::endl;
