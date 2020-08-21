@@ -244,6 +244,7 @@ int main() {
         // update frame time parameters
         float dt = glfwGetTime() - lastFrame;
         lastFrame += dt;
+        //updates the timer if timer has started
         timer->timeUpdate(timer->elapsedTime(),timer->timeStarted);
 
         decorativeCubes->Update(dt);
@@ -348,15 +349,13 @@ int main() {
         }
         //stopping timer
         if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS) {
-            timer->stop();
+            timer->pause();
         }
         //reseting timer
         if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS) {
             timer->reset();
         }
  
-
-
 
         // apply transformations to selectedNode
         //--------------------------------------
