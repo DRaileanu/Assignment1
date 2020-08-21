@@ -402,10 +402,10 @@ int main() {
             selectedRubikCube->rotatePositiveZCCW();
         }
         if (glfwGetKey(window, GLFW_KEY_MINUS) == GLFW_PRESS) {
-            selectedRubikCube->rotateNegativeZCW();
+            decorativeCubes->removeCubes(500);
         }
         if (glfwGetKey(window, GLFW_KEY_EQUAL) == GLFW_PRESS) {
-            selectedRubikCube->rotateNegativeZCCW();
+            decorativeCubes->addCubes(500);
         }
         //starting timer
         if (glfwGetKey(window, GLFW_KEY_N) == GLFW_PRESS) {

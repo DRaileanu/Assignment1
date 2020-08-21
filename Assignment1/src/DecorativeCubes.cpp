@@ -191,3 +191,17 @@ void DecorativeCubes::BuildVertexBuffer() {
     glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec3) * colours.size(), colours.data());
     glBindVertexArray(0);
 }
+
+void DecorativeCubes::addCubes(unsigned int numCubes) {
+    unsigned int newNumCubes = std::min(cubes.size() + numCubes, MAX_CUBES);
+    Resize(newNumCubes);
+}
+
+void DecorativeCubes::removeCubes(unsigned int numCubes) {
+    if (numCubes >= cubes.size()) {
+        Resize(0);
+    }
+    else {
+        Resize(cubes.size() - numCubes);
+    }
+}

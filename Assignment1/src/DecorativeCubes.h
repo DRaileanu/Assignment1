@@ -7,11 +7,11 @@
 
 
 class DecorativeCubes : public Drawable {
-	static const unsigned int MAX_CUBES = 5000;
+	static const unsigned int MAX_CUBES = 50000;
 	struct DecorativeCube {
 		DecorativeCube() {
-			int xPos = RandRange(-45, 45);
-			int zPos = RandRange(-45, 45);
+			int xPos = RandRange(-48, 48);
+			int zPos = RandRange(-48, 48);
 			position = glm::vec3(xPos, 0.0f, zPos);
 			color = glm::vec3(RandUnitVec());
 			keyframeProgress = 0.0f;
@@ -49,6 +49,8 @@ public:
 
 	void Resize(unsigned int numCubes);
 
+	void addCubes(unsigned int numCubes);//adds numCubes as long as still under MAX_CUBES
+	void removeCubes(unsigned int numCubes);//removes numCubes unless already 0
 
 protected:
 	void setupBufferData() override;
