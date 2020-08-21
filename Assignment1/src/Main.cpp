@@ -244,10 +244,7 @@ int main() {
         // update frame time parameters
         float dt = glfwGetTime() - lastFrame;
         lastFrame += dt;
-        //updates the timer if timer has started
-        timer->timeUpdate(timer->elapsedTime(),timer->timeStarted);
-
-
+ 
         
 
         // keyboard input handling
@@ -616,11 +613,16 @@ int main() {
 
 
 
+        // update scene
+        //-------------
+        //updates the timer if timer has started
+        timer->timeUpdate(timer->elapsedTime(), timer->timeStarted);
+        //update decorative cube positions
+        decorativeCubes->Update(dt);
+        //update rest of scene
+        renderer->updateScene(dt);
         // render
         // ------
-        decorativeCubes->Update(dt);
-
-        renderer->updateScene(dt);
         renderer->render();
 
         //displays FPS for debugging
