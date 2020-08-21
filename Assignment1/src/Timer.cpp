@@ -42,10 +42,14 @@ void Timer::pause() {
 }
 void Timer:: reset() {
 	//here we deconstruct all the models present.
-	leftMinute->~Model();
-	rightMinute->~Model();
-	leftSecond->~Model();
-	rightSecond->~Model();
+	removeChild(leftMinute);
+	//delete leftMinute;
+	removeChild(rightMinute);
+	//delete rightMinute;
+	removeChild(leftSecond);
+	//delete leftSecond;
+	removeChild(rightSecond);
+	//delete rightSecond;
 	//reset all the corresponding ints to zero
 	rightSecond_int = 0;
 	leftSecond_int = 0;
@@ -91,7 +95,8 @@ void Timer::updateRightSecond() {
 		rightSecond_int++;
 	}
 	char newModelChar = getModelChar(rightSecond_int);
-	rightSecond->~Model();
+	removeChild(rightSecond);
+	//delete rightSecond;
 	rightSecond = new Model(newModelChar);
 	rightSecond->translate(glm::vec3(5.5f, 0.0f, 0.0f));
 	addChild(rightSecond); 
@@ -106,7 +111,8 @@ void Timer::updateLeftSecond() {
 		leftSecond_int++;
 	}
 	char newModelChar = getModelChar(leftSecond_int);
-	leftSecond->~Model();
+	removeChild(leftSecond);
+	//delete leftSecond;
 	leftSecond = new Model(newModelChar);
 	leftSecond->translate(glm::vec3(2.0f, 0.0f, 0.0f));
 	addChild(leftSecond);	
@@ -122,7 +128,8 @@ void Timer::updateRightMinute() {
 		rightMinute_int++;
 	}
 	char newModelChar = getModelChar(rightMinute_int);
-	rightMinute->~Model();
+	removeChild(rightMinute);
+	//delete rightMinute;
 	rightMinute = new Model(newModelChar);
 	rightMinute->translate(glm::vec3(-2.0f, 0.0f, 0.0f));
 	addChild(rightMinute);
@@ -137,7 +144,8 @@ void Timer::updateLeftMinute() {
 		leftMinute_int++;
 	}
 	char newModelChar = getModelChar(leftMinute_int);
-	leftMinute->~Model();
+	removeChild(leftMinute);
+	//delete leftMinute;
 	leftMinute = new Model(newModelChar);
 	leftMinute->translate(glm::vec3(-5.5f, 0.0f, 0.0f));
 	addChild(leftMinute);
