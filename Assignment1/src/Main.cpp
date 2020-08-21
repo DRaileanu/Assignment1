@@ -24,6 +24,7 @@
 #include "Sphere.h"
 #include "RubikCubeColors.h"
 #include "RubikCubeParticles.h"
+#include "RubikCubeTextures.h"
 #include "ParticleEffect.h"
 #include "Random.h"
 #include "DecorativeCubes.h"
@@ -91,7 +92,7 @@ int main() {
 
     //generate all the Materials and textures
     Material* gridMaterial = new Material{
-        glm::vec3(0.75, 0.75, 0.75), 
+        glm::vec3(1.5, 1.5, 1.5), 
         glm::vec3(0.5, 0.5, 0.5), 
         glm::vec3(0.75, 0.75f, 0.75f), 
         32.0 
@@ -138,7 +139,7 @@ int main() {
     rubikCube1->translate(glm::vec3(0.0f, 25.0f, 0.0f));
     root->addChild(rubikCube1);
 
-    RubikCube* rubikCube2 = new RubikCubeColors;
+    RubikCube* rubikCube2 = new RubikCubeTextures;
     rubikCube2->scale(glm::vec3(3.0f, 3.0f, 3.0f));
     rubikCube2->translate(glm::vec3(0.0f, 25.0f, 0.0f));
     //root->addChild(rubikCube);
@@ -146,7 +147,7 @@ int main() {
 
     DecorativeCubes* decorativeCubes = new DecorativeCubes(750);
     DrawNode* decorativeCubesNode = new DrawNode(decorativeCubes);
-    decorativeCubesNode->translate(glm::vec3(0.0f, 0.2f, 0.0f));
+    decorativeCubesNode->translate(glm::vec3(0.0f, 0.1f, 0.0f));
     root->addChild(decorativeCubesNode);
 
     
@@ -209,7 +210,7 @@ int main() {
 
     LightNode* light = new LightNode(LightType::PointLight);
     light->setProperties(LightProperties{
-        glm::vec3(0.2f, 0.2f, 0.2f),
+        glm::vec3(0.4f, 0.4f, 0.4f),
         glm::vec3(3.0f, 3.0f, 3.0f),
         glm::vec3(1.0f, 1.0f, 1.0f),
         });

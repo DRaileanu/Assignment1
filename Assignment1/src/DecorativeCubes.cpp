@@ -136,8 +136,9 @@ void DecorativeCubes::setupBufferData() {
 void DecorativeCubes::Resize(unsigned int numCubes)
 {
     numCubes = std::min(numCubes, MAX_CUBES);
+    unsigned int cubesSize = cubes.size();
     if (cubes.size() < numCubes) {
-        for (unsigned int i = 0; i < numCubes - cubes.size(); ++i) {
+        for (unsigned int i = 0; i < numCubes - cubesSize; ++i) {
             cubes.push_back(DecorativeCube());
         }
     }

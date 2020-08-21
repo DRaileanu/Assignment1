@@ -10,8 +10,8 @@ class DecorativeCubes : public Drawable {
 	static const unsigned int MAX_CUBES = 5000;
 	struct DecorativeCube {
 		DecorativeCube() {
-			int xPos = RandRange(-49, 49);
-			int zPos = RandRange(-49, 49);
+			int xPos = RandRange(-45, 45);
+			int zPos = RandRange(-45, 45);
 			position = glm::vec3(xPos, 0.0f, zPos);
 			color = glm::vec3(RandUnitVec());
 			keyframeProgress = 0.0f;
