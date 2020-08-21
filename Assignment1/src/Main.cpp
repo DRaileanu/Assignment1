@@ -11,6 +11,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <irrKlang/irrKlang.h>
 
 #include "TextureLoader.h"
 #include "Shader.h"
@@ -68,10 +69,13 @@ int main() {
     //random generator for repositioning models
     int randomInt;
     srand(time(NULL));
-
+    
     //initialize OpenGL libraries and create window
     programInit();
 
+    //setup sound engine using irrKlang
+    irrklang::ISoundEngine* SoundEngine = irrklang::createIrrKlangDevice();
+    
     // setup Camera
     mainCamera = new Camera(glm::vec3(0.0f, 20.0f, 75.0f));
     glfwGetCursorPos(window, &lastX, &lastY);
@@ -117,17 +121,6 @@ int main() {
 
     //root, grid and axis lines
     GroupNode* root = new GroupNode;
-
-
-
-
-
-
-    DrawNode* axisLines = new DrawNode(new AxisLines);
-    axisLines->translate(glm::vec3(0.0f, 0.01, 0.0f));
-    axisLines->scale(glm::vec3(5.0f, 5.0f, 5.0f));
-    root->addChild(axisLines);
-
     
     DrawNode* grid = new DrawNode(new Grid);
     grid->setMaterial(gridMaterial);
@@ -235,7 +228,8 @@ int main() {
 
 
     
-
+    //start music
+    SoundEngine->play2D("audio/gameSong.mp3", true);
     //------------------------------------------------------------------------------
 
     // render loop
