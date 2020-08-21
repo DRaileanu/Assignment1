@@ -28,7 +28,7 @@ class Renderer{
 	const static unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;//quality of depth map
 	//if want variable far_plane, need to send them to shaders in render() and not in Renderer constructor!
 	const float near_plane = 0.1;//minimum distance from which depth is computed
-	const float far_plane = 100;//maximum distance at which depth is computed
+	const float far_plane = 200;//maximum distance at which depth is computed
 public:
 	Renderer(Camera* camera, Shader* genericShader, Shader* lightingMaterialShader, Shader* lightingTextureShader, Shader* shadowShader);
 	~Renderer();

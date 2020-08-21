@@ -6,7 +6,8 @@
  Since we already implemented manually the Camera in assignment 1, we took the Camera class from learnopengl.com for this one, since it's very simple and neat.
 
  We use irrKlang audio engine from https://www.ambiera.com/irrklang
- Audio sounds where
+ Game audio: https://www.bensound.com/royalty-free-music/track/moose
+ Rubik Cube turning sound: https://freesound.org/people/jrayhartley/sounds/514303/
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------
 */
 
@@ -83,7 +84,7 @@ int main() {
 
     
     // setup Camera
-    mainCamera = new Camera(glm::vec3(0.0f, 20.0f, 75.0f));
+    mainCamera = new Camera(glm::vec3(45.0f, 75.0f, 45.0f), glm::vec3(0.0f, 1.0f, 0.0f), -135.0f, -30.0f);
     glfwGetCursorPos(window, &lastX, &lastY);
 
     ////frame time parameters
@@ -105,7 +106,7 @@ int main() {
     Material* gridMaterial = new Material{
         glm::vec3(1.5, 1.5, 1.5), 
         glm::vec3(0.5, 0.5, 0.5), 
-        glm::vec3(0.75, 0.75f, 0.75f), 
+        glm::vec3(0.25, 0.25f, 0.25f), 
         32.0 
     };
     Material* polishedGoldMaterial = new Material{
@@ -122,39 +123,49 @@ int main() {
     };
 
     GLuint tileTexture = loadTexture("res/floor.jpg");
-    GLuint woodTexture = loadTexture("res/wood.jpg");
 
-
-    //root, grid and axis lines
+    //root of scene
     GroupNode* root = new GroupNode;
     
-    DrawNode* grid = new DrawNode(new Grid);
-    grid->setMaterial(gridMaterial);
-    grid->setTexture(tileTexture);
-    root->addChild(grid);
-
-    
-    RubikCube* rubikCube1 = new RubikCubeJigsaw;
-    rubikCube1->scale(glm::vec3(3.0f, 3.0f, 3.0f));
-    rubikCube1->translate(glm::vec3(0.0f, 25.0f, 0.0f));
-    root->addChild(rubikCube1);
+    //rubik cubes
+    RubikCube* rubikCube1 = new RubikCubeColors;
+    rubikCube1->scale(glm::vec3(5.0f, 5.0f, 5.0f));
+    rubikCube1->translate(glm::vec3(15.0f, 47.5f, 15.0f));
+    root->addChild(rubikCube1);//only add one rubik cube, rest are added during swap
 
     RubikCube* rubikCube2 = new RubikCubeTextures;
-    rubikCube2->scale(glm::vec3(3.0f, 3.0f, 3.0f));
-    rubikCube2->translate(glm::vec3(0.0f, 25.0f, 0.0f));
-    //root->addChild(rubikCube);
+    rubikCube2->scale(glm::vec3(5.0f, 5.0f, 5.0f));
+    rubikCube2->translate(glm::vec3(15.0f, 47.5f, 15.0f));
+
+    RubikCube* rubikCube3 = new RubikCubeJigsaw;
+    rubikCube2->scale(glm::vec3(5.0f, 5.0f, 5.0f));
+    rubikCube2->translate(glm::vec3(15.0f, 47.5f, 15.0f));
+
+    RubikCube* rubikCube4 = new RubikCubeParticles;
+    rubikCube2->scale(glm::vec3(5.0f, 5.0f, 5.0f));
+    rubikCube2->translate(glm::vec3(15.0f, 47.5f, 15.0f));
 
 
-    DecorativeCubes* decorativeCubes = new DecorativeCubes(750);
-    DrawNode* decorativeCubesNode = new DrawNode(decorativeCubes);
-    decorativeCubesNode->translate(glm::vec3(0.0f, 0.1f, 0.0f));
-    root->addChild(decorativeCubesNode);
 
+    //skybox, made from 6 grids and decorative cubes
+    //decorative cubes drawable
+    DecorativeCubes* decorativeCubes = new DecorativeCubes(2000);
+    //grid1(ground)
+    GroupNode* grid1Node = new GroupNode;
+    root->addChild(grid1Node);
+
+    DrawNode* grid1 = new DrawNode(new Grid);
+    grid1->setMaterial(gridMaterial);
+    grid1->setTexture(tileTexture);
+    root->addChild(grid1);
     
-    //grid 2
+    DrawNode* decorativeCubesNode1 = new DrawNode(decorativeCubes);
+    decorativeCubesNode1->translate(glm::vec3(0.0f, 0.1f, 0.0f));
+    grid1Node->addChild(decorativeCubesNode1);
+    //grid 2(ceiling)
     GroupNode* grid2Node = new GroupNode;
-    grid2Node->rotate(glm::vec3(90.0f, 0.0f, 0.0f));
-    grid2Node->translate(glm::vec3(0.0f, 50.0f, -50.0f));
+    grid2Node->rotate(glm::vec3(180.0f, 0.0f, 0.0f));
+    grid2Node->translate(glm::vec3(0.0f, 100.0f, 0.0f));
     root->addChild(grid2Node);
 
     DrawNode* grid2 = new DrawNode(new Grid);
@@ -164,9 +175,7 @@ int main() {
     
     DrawNode* decorativeCubesNode2 = new DrawNode(decorativeCubes);
     grid2Node->addChild(decorativeCubesNode2);
-
-    
-    //grid3
+    //grid3(left wall)
     GroupNode* grid3Node = new GroupNode;
     grid3Node->rotate(glm::vec3(0.0f, 0.0f, -90.0f));
     grid3Node->translate(glm::vec3(-50.0f, 50.0f, 0.0f));
@@ -179,14 +188,12 @@ int main() {
 
     DrawNode* decorativeCubesNode3 = new DrawNode(decorativeCubes);
     grid3Node->addChild(decorativeCubesNode3);
-
-
-    //grid4
+    //grid4(right wall)
     GroupNode* grid4Node = new GroupNode;
     grid4Node->rotate(glm::vec3(0.0f, 0.0f, 90.0f));
     grid4Node->translate(glm::vec3(50.0f, 50.0f, 0.0f));
     root->addChild(grid4Node);
-
+    
     DrawNode* grid4 = new DrawNode(new Grid);
     grid4->setMaterial(gridMaterial);
     grid4->setTexture(tileTexture);
@@ -195,17 +202,44 @@ int main() {
     DrawNode* decorativeCubesNode4 = new DrawNode(decorativeCubes);
     grid4Node->addChild(decorativeCubesNode4);
 
+    //grid5(front wall)
+    GroupNode* grid5Node = new GroupNode;
+    grid5Node->rotate(glm::vec3(90.0f, 0.0f, 0.0f));
+    grid5Node->translate(glm::vec3(0.0f, 50.0f, -50.0f));
+    root->addChild(grid5Node);
+
+    DrawNode* grid5 = new DrawNode(new Grid);
+    grid5->setMaterial(gridMaterial);
+    grid5->setTexture(tileTexture);
+    grid5Node->addChild(grid5);
+
+    DrawNode* decorativeCubesNode5 = new DrawNode(decorativeCubes);
+    grid5Node->addChild(decorativeCubesNode5);
+    //grid6(back wall)
+    GroupNode* grid6Node = new GroupNode;
+    grid6Node->rotate(glm::vec3(-90.0f, 0.0f, 0.0f));
+    grid6Node->translate(glm::vec3(0.0f, 50.0f, 50.0f));
+    root->addChild(grid6Node);
+
+    DrawNode* grid6 = new DrawNode(new Grid);
+    grid6->setMaterial(gridMaterial);
+    grid6->setTexture(tileTexture);
+    grid6Node->addChild(grid6);
+
+    DrawNode* decorativeCubesNode6 = new DrawNode(decorativeCubes);
+    grid6Node->addChild(decorativeCubesNode6);
+
+    //timer
     Timer* timer = new Timer();
     timer->scale(glm::vec3(3.0f, 3.0f, 3.0f));
-    timer->translate(glm::vec3(10.0f, 10.0f, 0.0f));
+    timer->rotate(glm::vec3(0.0f, 45.0f, 0.0f));
+    timer->translate(glm::vec3(-25.0f, 50.0f, -25.0f));
     root->addChild(timer);
-
-
 
     
     //light source(s)
     GroupNode* lightNode = new GroupNode();
-    lightNode->translate(glm::vec3(0.0f, 30.0f, 0.0f));
+    lightNode->translate(glm::vec3(45.0f, 85.0f, 45.0f));
     root->addChild(lightNode);
 
     LightNode* light = new LightNode(LightType::PointLight);
@@ -219,7 +253,7 @@ int main() {
     Drawable* lightcube = new Cube;
     lightcube->setColours(glm::vec3(1.0f));
     DrawNode* light1cube = new DrawNode(lightcube);
-    light1cube->translate(glm::vec3(0.0f, 0.0f, 0.5f));
+    light1cube->translate(glm::vec3(0.0f, 0.5f, 0.0f));
     lightNode->addChild(light1cube);
 
     //set light source that cast shadows. Can have multiple lights, but only one casts shadows
@@ -230,7 +264,7 @@ int main() {
     
 
     RubikCube* selectedRubikCube = rubikCube1;
-    SceneNode* selectedNode = selectedRubikCube;
+    SceneNode* selectedNode = rubikCube1;
 
 
     

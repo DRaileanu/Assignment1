@@ -77,6 +77,8 @@
     <None Include="shaders\lightingMaterial.fs" />
     <None Include="shaders\lightingTexture.fs" />
     <None Include="shaders\lightingTexture.vs" />
+    <None Include="irrKlang.dll" />
+    <None Include="ikpMP3.dll" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="textures\awesomeface.png">

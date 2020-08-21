@@ -13,7 +13,7 @@ public:
 		GroupNode* rubikPart;
 		Material* textureMaterial = new Material{
 			glm::vec3(1.0, 1.0, 1.0),
-			glm::vec3(0.5, 0.5, 0.5),
+			glm::vec3(1.5, 1.5, 1.5),
 			glm::vec3(0.75, 0.75f, 0.75f),
 			32.0
 		};

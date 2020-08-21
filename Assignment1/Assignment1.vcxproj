@@ -177,6 +177,8 @@
     <ClCompile Include="src\TimexCube.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ikpMP3.dll" />
+    <None Include="irrKlang.dll" />
     <None Include="shaders\generic.fs" />
     <None Include="shaders\generic.vs" />
     <None Include="shaders\lightingTexture.fs" />
