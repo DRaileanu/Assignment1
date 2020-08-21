@@ -144,12 +144,12 @@ int main() {
     //root->addChild(rubikCube);
 
 
-    DecorativeCubes* decorativeCubes = new DecorativeCubes(500);
+    DecorativeCubes* decorativeCubes = new DecorativeCubes(750);
     DrawNode* decorativeCubesNode = new DrawNode(decorativeCubes);
     decorativeCubesNode->translate(glm::vec3(0.0f, 0.2f, 0.0f));
     root->addChild(decorativeCubesNode);
 
-
+    
     //grid 2
     GroupNode* grid2Node = new GroupNode;
     grid2Node->rotate(glm::vec3(90.0f, 0.0f, 0.0f));

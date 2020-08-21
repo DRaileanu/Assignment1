@@ -88,7 +88,7 @@ void DecorativeCubes::Update(float dt) {
             //otherwise, rotate either -90 or +90 degrees
             else {
                 unsigned int randInt = rand() % 100;
-                if (randInt < 60) {
+                if (randInt < 40) {
                     if (randInt < 20) {
                         glm::quat rotation(glm::vec3(0.0f, glm::radians(90.0f), 0.0f));
                         cube.direction = rotation * cube.direction;
@@ -115,14 +115,14 @@ void DecorativeCubes::setupBufferData() {
     //positions
     glGenBuffers(1, &bufferObjects[VERTEX_BUFFER]);
     glBindBuffer(GL_ARRAY_BUFFER, bufferObjects[VERTEX_BUFFER]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * 8 * MAX_CUBES, NULL, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * 8 * MAX_CUBES, NULL, GL_DYNAMIC_DRAW);
     glVertexAttribPointer(VERTEX_BUFFER, 3, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(VERTEX_BUFFER);
 
     //colours
     glGenBuffers(1, &bufferObjects[COLOUR_BUFFER]);
     glBindBuffer(GL_ARRAY_BUFFER, bufferObjects[COLOUR_BUFFER]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * 8 * MAX_CUBES, NULL, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * 8 * MAX_CUBES, NULL, GL_DYNAMIC_DRAW);
     glVertexAttribPointer(COLOUR_BUFFER, 3, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(COLOUR_BUFFER);
 
@@ -144,9 +144,9 @@ void DecorativeCubes::Resize(unsigned int numCubes)
 }
 
 void DecorativeCubes::BuildVertexBuffer() {
-    const glm::vec3 X(0.2, 0, 0);
-    const glm::vec3 Y(0, 0.2, 0);
-    const glm::vec3 Z(0, 0, 0.2);
+    const glm::vec3 X(0.1, 0, 0);
+    const glm::vec3 Y(0, 0.1, 0);
+    const glm::vec3 Z(0, 0, 0.1);
 
     for (unsigned int i = 0; i < cubes.size(); ++i) {
         DecorativeCube& cube = cubes[i];

@@ -15,7 +15,7 @@ class DecorativeCubes : public Drawable {
 			position = glm::vec3(xPos, 0.0f, zPos);
 			color = glm::vec3(RandUnitVec());
 			keyframeProgress = 0.0f;
-			keyframeDuration = 0.2f;
+			keyframeDuration = 0.4f;
 			keyframePos1 = position;
 
 			switch (rand() % 4) {

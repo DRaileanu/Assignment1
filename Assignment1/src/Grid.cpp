@@ -1,6 +1,7 @@
 #include "Grid.h"
 
 Grid::Grid() {
+	/*
 	vertices.reserve(100*100*2*3);//n*n squares * 2 triangles/square * 3 vertices/triangle
 
 	for (int x = -50; x < 50; ++x) {
@@ -19,6 +20,33 @@ Grid::Grid() {
 	for (unsigned int i = 0; i < normals.size(); ++i) {
 		normals[i] = glm::vec3(0.0f, 1.0f, 0.0f);
 	}
+	*/
+
+	vertices = {
+		glm::vec3(-50, 0, 50),
+		glm::vec3(50, 0, 50),
+		glm::vec3(50, 0, -50),
+		glm::vec3(-50, 0, 50),
+		glm::vec3(50, 0, -50),
+		glm::vec3(-50, 0, -50)
+	};
+	texCoords = {
+		glm::vec2(0,0),
+		glm::vec2(100,0),
+		glm::vec2(100,100),
+		glm::vec2(0,0),
+		glm::vec2(100,100),
+		glm::vec2(0,100)
+	};
+	normals = {
+		glm::vec3(0, 1, 0),
+		glm::vec3(0, 1, 0),
+		glm::vec3(0, 1, 0),
+		glm::vec3(0, 1, 0),
+		glm::vec3(0, 1, 0),
+		glm::vec3(0, 1, 0)
+	};
+
 
 	setupBufferData();
 }
