@@ -72,7 +72,7 @@ void Timer:: reset() {
 	current_seconds = 0;
 }
 unsigned long Timer::elapsedTime() {
-	return 100*((unsigned long)clock() - begTime) / CLOCKS_PER_SEC;
+	return ((unsigned long)clock() - begTime) / CLOCKS_PER_SEC;
 }
 
 void Timer::timeUpdate(unsigned long elapsedTime,bool timeStarted) {

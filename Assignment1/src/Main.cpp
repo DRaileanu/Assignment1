@@ -631,7 +631,7 @@ int main() {
         total += 1/dt;
         float avg = total / frames;
         frames++;
-        //std::cout << '\r' << "dt: " << dt << "\tFPS: " << 1 / dt << "\tavgFPS: " << avg;;//for debugging
+        std::cout << '\r' << "dt: " << dt << "\tFPS: " << 1 / dt << "\tavgFPS: " << avg;;//for debugging
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
