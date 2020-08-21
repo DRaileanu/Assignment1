@@ -238,7 +238,8 @@ int main() {
         float dt = glfwGetTime() - lastFrame;
         lastFrame += dt;
 
-        decorativeCubes->Update(dt);
+
+        
 
         // keyboard input handling
         // --------------
@@ -595,6 +596,8 @@ int main() {
 
         // render
         // ------
+        decorativeCubes->Update(dt);
+
         renderer->updateScene(dt);
         renderer->render();
 

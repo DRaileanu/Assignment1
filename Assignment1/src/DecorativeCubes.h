@@ -7,11 +7,11 @@
 
 
 class DecorativeCubes : public Drawable {
-	static const unsigned int MAX_CUBES = 1000;
+	static const unsigned int MAX_CUBES = 5000;
 	struct DecorativeCube {
 		DecorativeCube() {
-			int xPos = RandRange(-40, 40);
-			int zPos = RandRange(-40, 40);
+			int xPos = RandRange(-49, 49);
+			int zPos = RandRange(-49, 49);
 			position = glm::vec3(xPos, 0.0f, zPos);
 			color = glm::vec3(RandUnitVec());
 			keyframeProgress = 0.0f;
@@ -40,7 +40,7 @@ class DecorativeCubes : public Drawable {
 	};
 
 public:
-	DecorativeCubes(unsigned int numCubes = 1);
+	DecorativeCubes(unsigned int numCubes = 0);
 	virtual ~DecorativeCubes() {}
 
 	void draw() override;

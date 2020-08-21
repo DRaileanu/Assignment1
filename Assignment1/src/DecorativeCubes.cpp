@@ -136,8 +136,13 @@ void DecorativeCubes::setupBufferData() {
 void DecorativeCubes::Resize(unsigned int numCubes)
 {
     numCubes = std::min(numCubes, MAX_CUBES);
-    for (unsigned int i = 0; i < numCubes; ++i) {
-        cubes.push_back(DecorativeCube());
+    if (cubes.size() < numCubes) {
+        for (unsigned int i = 0; i < numCubes - cubes.size(); ++i) {
+            cubes.push_back(DecorativeCube());
+        }
+    }
+    else {
+        cubes.resize(numCubes);
     }
     vertices.resize(8 * numCubes);
     colours.resize(8 * numCubes);
@@ -180,8 +185,8 @@ void DecorativeCubes::BuildVertexBuffer() {
 
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, bufferObjects[VERTEX_BUFFER]);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec3) * vertices.size(), &vertices[0]);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec3) * vertices.size(), vertices.data());
     glBindBuffer(GL_ARRAY_BUFFER, bufferObjects[COLOUR_BUFFER]);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec3) * colours.size(), &colours[0]);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec3) * colours.size(), colours.data());
     glBindVertexArray(0);
 }
