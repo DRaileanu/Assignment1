@@ -25,6 +25,7 @@
 #include "RubikCubeColors.h"
 #include "RubikCubeParticles.h"
 #include "RubikCubeTextures.h"
+#include "RubikCubeJigsaw.h"
 #include "ParticleEffect.h"
 #include "Random.h"
 #include "DecorativeCubes.h"
@@ -134,7 +135,7 @@ int main() {
     root->addChild(grid);
 
     
-    RubikCube* rubikCube1 = new RubikCubeParticles;
+    RubikCube* rubikCube1 = new RubikCubeJigsaw;
     rubikCube1->scale(glm::vec3(3.0f, 3.0f, 3.0f));
     rubikCube1->translate(glm::vec3(0.0f, 25.0f, 0.0f));
     root->addChild(rubikCube1);

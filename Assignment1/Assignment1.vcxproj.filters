@@ -51,9 +51,6 @@
     <ClCompile Include="src\RubikCube.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Quad.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\ParticleEffect.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -119,6 +116,24 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\triangle.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\jigsaw1.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\jigsaw2.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\jigsaw3.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\jigsaw4.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\jigsaw5.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\jigsaw6.jpg">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
@@ -199,6 +214,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ZigzagCube.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RubikCubeJigsaw.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
