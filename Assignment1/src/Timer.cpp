@@ -43,13 +43,13 @@ void Timer::pause() {
 void Timer:: reset() {
 	//here we deconstruct all the models present.
 	removeChild(leftMinute);
-	//delete leftMinute;
+	delete leftMinute;
 	removeChild(rightMinute);
-	//delete rightMinute;
+	delete rightMinute;
 	removeChild(leftSecond);
-	//delete leftSecond;
+	delete leftSecond;
 	removeChild(rightSecond);
-	//delete rightSecond;
+	delete rightSecond;
 	//reset all the corresponding ints to zero
 	rightSecond_int = 0;
 	leftSecond_int = 0;
@@ -72,7 +72,7 @@ void Timer:: reset() {
 	current_seconds = 0;
 }
 unsigned long Timer::elapsedTime() {
-	return ((unsigned long)clock() - begTime) / CLOCKS_PER_SEC;
+	return 100*((unsigned long)clock() - begTime) / CLOCKS_PER_SEC;
 }
 
 void Timer::timeUpdate(unsigned long elapsedTime,bool timeStarted) {
@@ -96,7 +96,7 @@ void Timer::updateRightSecond() {
 	}
 	char newModelChar = getModelChar(rightSecond_int);
 	removeChild(rightSecond);
-	//delete rightSecond;
+	delete rightSecond;
 	rightSecond = new Model(newModelChar);
 	rightSecond->translate(glm::vec3(5.5f, 0.0f, 0.0f));
 	addChild(rightSecond); 
@@ -112,7 +112,7 @@ void Timer::updateLeftSecond() {
 	}
 	char newModelChar = getModelChar(leftSecond_int);
 	removeChild(leftSecond);
-	//delete leftSecond;
+	delete leftSecond;
 	leftSecond = new Model(newModelChar);
 	leftSecond->translate(glm::vec3(2.0f, 0.0f, 0.0f));
 	addChild(leftSecond);	
@@ -129,7 +129,7 @@ void Timer::updateRightMinute() {
 	}
 	char newModelChar = getModelChar(rightMinute_int);
 	removeChild(rightMinute);
-	//delete rightMinute;
+	delete rightMinute;
 	rightMinute = new Model(newModelChar);
 	rightMinute->translate(glm::vec3(-2.0f, 0.0f, 0.0f));
 	addChild(rightMinute);
@@ -145,7 +145,7 @@ void Timer::updateLeftMinute() {
 	}
 	char newModelChar = getModelChar(leftMinute_int);
 	removeChild(leftMinute);
-	//delete leftMinute;
+	delete leftMinute;
 	leftMinute = new Model(newModelChar);
 	leftMinute->translate(glm::vec3(-5.5f, 0.0f, 0.0f));
 	addChild(leftMinute);
