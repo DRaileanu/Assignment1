@@ -36,6 +36,7 @@
 #include "ParticleEffect.h"
 #include "Random.h"
 #include "DecorativeCubes.h"
+#include "Pyramid.h"
 
 
 #include <iostream>
@@ -130,21 +131,20 @@ int main() {
     //rubik cubes
     RubikCube* rubikCube1 = new RubikCubeColors;
     rubikCube1->scale(glm::vec3(5.0f, 5.0f, 5.0f));
-    rubikCube1->translate(glm::vec3(15.0f, 47.5f, 15.0f));
+    rubikCube1->translate(glm::vec3(15.0f, 44.0f, 15.0f));
     root->addChild(rubikCube1);//only add one rubik cube, rest are added during swap
 
     RubikCube* rubikCube2 = new RubikCubeTextures;
     rubikCube2->scale(glm::vec3(5.0f, 5.0f, 5.0f));
-    rubikCube2->translate(glm::vec3(15.0f, 47.5f, 15.0f));
-
+    rubikCube2->translate(glm::vec3(15.0f, 44.0f, 15.0f));
+    
     RubikCube* rubikCube3 = new RubikCubeJigsaw;
-    rubikCube2->scale(glm::vec3(5.0f, 5.0f, 5.0f));
-    rubikCube2->translate(glm::vec3(15.0f, 47.5f, 15.0f));
+    rubikCube3->scale(glm::vec3(5.0f, 5.0f, 5.0f));
+    rubikCube3->translate(glm::vec3(15.0f, 44.0f, 15.0f));
 
     RubikCube* rubikCube4 = new RubikCubeParticles;
-    rubikCube2->scale(glm::vec3(5.0f, 5.0f, 5.0f));
-    rubikCube2->translate(glm::vec3(15.0f, 47.5f, 15.0f));
-
+    rubikCube4->scale(glm::vec3(5.0f, 5.0f, 5.0f));
+    rubikCube4->translate(glm::vec3(15.0f, 44.f, 15.0f));
 
 
     //skybox, made from 6 grids and decorative cubes
@@ -233,7 +233,7 @@ int main() {
     Timer* timer = new Timer();
     timer->scale(glm::vec3(3.0f, 3.0f, 3.0f));
     timer->rotate(glm::vec3(0.0f, 45.0f, 0.0f));
-    timer->translate(glm::vec3(-25.0f, 50.0f, -25.0f));
+    timer->translate(glm::vec3(-25.0f, 53.0f, -25.0f));
     root->addChild(timer);
 
     
@@ -279,8 +279,7 @@ int main() {
         // update frame time parameters
         float dt = glfwGetTime() - lastFrame;
         lastFrame += dt;
- 
-        
+
 
         // keyboard input handling
         // --------------
@@ -304,24 +303,10 @@ int main() {
 
 
         //select appropriate rubik cube
+        //select Colours Rubik CUbe
         {
             static bool keyPress = false;
             if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS) {
-                if (!keyPress) {
-                    root->removeChild(selectedRubikCube);
-                    root->addChild(rubikCube2);
-                    selectedRubikCube = rubikCube2;
-                    selectedNode = selectedRubikCube;
-                    keyPress = true;
-                }
-            }
-            if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_RELEASE) {
-                keyPress = false;
-            }
-        }
-        {
-            static bool keyPress = false;
-            if (glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS) {
                 if (!keyPress) {
                     root->removeChild(selectedRubikCube);
                     root->addChild(rubikCube1);
@@ -330,36 +315,85 @@ int main() {
                     keyPress = true;
                 }
             }
+            if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_RELEASE) {
+                keyPress = false;
+            }
+        }
+        //select Textures Rubik Cube
+        {
+            static bool keyPress = false;
+            if (glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS) {
+                if (!keyPress) {
+                    root->removeChild(selectedRubikCube);
+                    root->addChild(rubikCube2);
+                    selectedRubikCube = rubikCube2;
+                    selectedNode = selectedRubikCube;
+                    keyPress = true;
+                }
+            }
             if (glfwGetKey(window, GLFW_KEY_H) == GLFW_RELEASE) {
+                keyPress = false;
+            }
+        }
+        //select Jigsaw Rubik Cube
+        {
+            static bool keyPress = false;
+            if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS) {
+                if (!keyPress) {
+                    root->removeChild(selectedRubikCube);
+                    root->addChild(rubikCube3);
+                    selectedRubikCube = rubikCube3;
+                    selectedNode = selectedRubikCube;
+                    keyPress = true;
+                }
+            }
+            if (glfwGetKey(window, GLFW_KEY_C) == GLFW_RELEASE) {
+                keyPress = false;
+            }
+        }
+        //select Particles Rubik Cube
+        {
+            static bool keyPress = false;
+            if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS) {
+                if (!keyPress) {
+                    root->removeChild(selectedRubikCube);
+                    root->addChild(rubikCube4);
+                    selectedRubikCube = rubikCube4;
+                    selectedNode = selectedRubikCube;
+                    keyPress = true;
+                }
+            }
+            if (glfwGetKey(window, GLFW_KEY_B) == GLFW_RELEASE) {
                 keyPress = false;
             }
         }
 
 
+
         // apply rubikCube rotations
         if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
-            selectedRubikCube->rotatePositiveXCW();       
+            selectedRubikCube->selectFace1();
         }
         if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
-            selectedRubikCube->rotatePositiveXCCW();
+            selectedRubikCube->selectFace2();
         }
         if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
-            selectedRubikCube->rotateNegativeXCW();
+            selectedRubikCube->selectFace3();
         }
         if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) {
-            selectedRubikCube->rotateNegativeXCCW();
+            selectedRubikCube->selectFace4();
         }
         if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) {
-            selectedRubikCube->rotatePositiveYCW();
+            selectedRubikCube->selectFace5();
         }
         if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS) {
-            selectedRubikCube->rotatePositiveYCCW();
+            selectedRubikCube->selectFace6();
         }
         if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS) {
-            selectedRubikCube->rotateNegativeYCW();
+            selectedRubikCube->rotateFaceCW();
         }
         if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS) {
-            selectedRubikCube->rotateNegativeYCCW();
+            selectedRubikCube->rotateFaceCCW();
         }
         if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS) {
             selectedRubikCube->rotatePositiveZCW();

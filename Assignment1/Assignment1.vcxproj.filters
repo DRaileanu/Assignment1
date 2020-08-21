@@ -215,6 +215,9 @@
     <ClInclude Include="src\RubikCubeJigsaw.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Pyramid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Media Include="audio\gameSong.mp3" />

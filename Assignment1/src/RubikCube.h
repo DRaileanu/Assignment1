@@ -3,7 +3,7 @@
 #include "DrawNode.h"
 #include "Quad.h"
 #include "irrKlang/irrKlang.h"
-
+#include "Pyramid.h"
 #include <map>
 
 //Class that handles the topology and transformations of the RubikCube
@@ -31,6 +31,18 @@ public:
 
 	virtual void setupDrawNodes() = 0;
 
+	//methods to select face to apply rotations
+	void selectFace1();
+	void selectFace2();
+	void selectFace3();
+	void selectFace4();
+	void selectFace5();
+	void selectFace6();
+
+	//methods to rotate selected face
+	void rotateFaceCW();
+	void rotateFaceCCW();
+
 	//methods to rotate faces of the Rubik Cube
 	void rotatePositiveXCW();
 	void rotatePositiveXCCW();
@@ -52,6 +64,8 @@ protected:
 	virtual void update(const glm::mat4& CTM, float dt) override;//override SceneNode method in order to call animationUpdate() during an animation
 	void animationUpdate();//rotates/translates animationNodes during an animation
 
+	DrawNode* arrow;
+	int selectedFace;
 	std::map<std::tuple<int, int, int>, GroupNode*> rubikParts;//keeps track of the coordinates of the 26 mini-cubes of the RubikCube
 	bool animated;
 	std::vector<GroupNode*> animationNodes;//animationUpdate() needs to keep track of which mini-cubes are we animating

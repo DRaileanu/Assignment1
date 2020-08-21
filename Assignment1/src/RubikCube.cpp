@@ -4,9 +4,16 @@ extern irrklang::ISoundEngine* SoundEngine;
 RubikCube::RubikCube() {
 	animated = false;
 	animationDuration = 0.3f;
+	//add arrow
+	arrow = new DrawNode(new Pyramid);
+	arrow->setRotation(glm::vec3(180.0, 0.0f, 0.0f));
+	arrow->setTranslation(glm::vec3(0.0f, 3.0f, 0.0f));
+	arrow->scale(glm::vec3(0.75, 0.75, 0.75));
+	arrow->setTransparency(0.75f);
+	addChild(arrow);
+
 	//setup all the rubikParts
 	GroupNode* rubikPart;
-
 	//1,1,1
 	rubikPart = new GroupNode;
 	rubikPart->translate(glm::vec3(-1.0f, -1.0f, 1.0f));
@@ -143,7 +150,7 @@ RubikCube::RubikCube() {
 	rubikParts[std::make_tuple(3, 3, 3)] = rubikPart;
 	addChild(rubikPart);
 
-
+	selectFace1();
 }
 
 
@@ -155,6 +162,347 @@ void RubikCube::update(const glm::mat4& CTM, float dt) {
 	updateWorldTransform(CTM);
 }
 
+void RubikCube::selectFace1() {
+	selectedFace = 1;
+	//clear current selected nodes and add new ones
+	animationNodes.clear();
+	for (int x = 1; x <= 3; ++x) {
+		for (int z = 1; z <= 3; ++z) {
+			std::tuple<int, int, int> coord(x, 3, z);
+			GroupNode* node = rubikParts[coord];
+			animationNodes.push_back(node);
+		}
+	}
+	//update arrow position
+	arrow->setTranslation(glm::vec3(0.0f, 3.0f, 0.0f));
+	arrow->setRotation(glm::vec3(180.0f, 0.0f, 0.0f));
+}
+
+void RubikCube::selectFace2() {
+	selectedFace = 2;
+	animationNodes.clear();
+	for (int x = 1; x <= 3; ++x) {
+		for (int y = 1; y <= 3; ++y) {
+			std::tuple<int, int, int> coord(x, y, 1);
+			GroupNode* node = rubikParts[coord];
+			animationNodes.push_back(node);
+		}
+	}
+	arrow->setTranslation(glm::vec3(0.0f, 0.0f, 3.0f));
+	arrow->setRotation(glm::vec3(-90.0f, 0.0f, 0.0f));
+}
+
+void RubikCube::selectFace3() {
+	selectedFace = 3;
+	animationNodes.clear();
+	for (int y = 1; y <= 3; ++y) {
+		for (int z = 1; z <= 3; ++z) {
+			std::tuple<int, int, int> coord(3, y, z);
+			GroupNode* node = rubikParts[coord];
+			animationNodes.push_back(node);
+		}
+	}
+	arrow->setTranslation(glm::vec3(3.0f, 0.0f, 0.0f));
+	arrow->setRotation(glm::vec3(0.0f, 0.0f, 90.0f));
+}
+
+void RubikCube::selectFace4() {
+	selectedFace = 4;
+	animationNodes.clear();
+	for (int x = 1; x <= 3; ++x) {
+		for (int z = 1; z <= 3; ++z) {
+			std::tuple<int, int, int> coord(x, 1, z);
+			GroupNode* node = rubikParts[coord];
+			animationNodes.push_back(node);
+		}
+	}
+	arrow->setTranslation(glm::vec3(0.0f, -4.0f, 0.0f));
+	arrow->setRotation(glm::vec3(0.0f, 0.0f, 0.0f));
+}
+
+void RubikCube::selectFace5() {
+	selectedFace = 5;
+	animationNodes.clear();
+	for (int y = 1; y <= 3; ++y) {
+		for (int z = 1; z <= 3; ++z) {
+			std::tuple<int, int, int> coord(1, y, z);
+			GroupNode* node = rubikParts[coord];
+			animationNodes.push_back(node);
+		}
+	}
+	arrow->setTranslation(glm::vec3(-4.0f, 0.0f, 0.0f));
+	arrow->setRotation(glm::vec3(0.0f, 0.0f, -90.0f));
+}
+
+void RubikCube::selectFace6() {
+	selectedFace = 6;
+	animationNodes.clear();
+	for (int x = 1; x <= 3; ++x) {
+		for (int y = 1; y <= 3; ++y) {
+			std::tuple<int, int, int> coord(x, y, 3);
+			GroupNode* node = rubikParts[coord];
+			animationNodes.push_back(node);
+		}
+	}
+	arrow->setTranslation(glm::vec3(0.0f, 0.0f, -4.0f));
+	arrow->setRotation(glm::vec3(90.0f, 0.0f, 0.0f));
+}
+
+
+void RubikCube::rotateFaceCW() {
+	if (!animated) {//only do the setup when called without any animation in progress
+		animated = true;
+		SoundEngine->play2D("audio/turn.mp3");
+
+		std::map<std::tuple<int, int, int>, GroupNode*> temp;
+		switch (selectedFace) {
+		case 1:
+			animationRotation = glm::vec3(0.0f, -90.0f, 0.0f);
+			for (int x = 1; x <= 3; ++x) {
+				for (int z = 1; z <= 3; ++z) {
+					std::tuple<int, int, int> coord(x, 3, z);
+					GroupNode* node = rubikParts[coord];
+					temp[coord] = node;
+				}
+			}
+			rubikParts.at(std::make_tuple(1, 3, 1)) = temp[std::make_tuple(3, 3, 1)];
+			rubikParts.at(std::make_tuple(1, 3, 2)) = temp[std::make_tuple(2, 3, 1)];
+			rubikParts.at(std::make_tuple(1, 3, 3)) = temp[std::make_tuple(1, 3, 1)];
+			rubikParts.at(std::make_tuple(2, 3, 1)) = temp[std::make_tuple(3, 3, 2)];
+			rubikParts.at(std::make_tuple(2, 3, 3)) = temp[std::make_tuple(1, 3, 2)];
+			rubikParts.at(std::make_tuple(3, 3, 1)) = temp[std::make_tuple(3, 3, 3)];
+			rubikParts.at(std::make_tuple(3, 3, 2)) = temp[std::make_tuple(2, 3, 3)];
+			rubikParts.at(std::make_tuple(3, 3, 3)) = temp[std::make_tuple(1, 3, 3)];
+			break;
+		
+		case 2:
+			animationRotation = glm::vec3(0.0f, 0.0f, -90.0f);
+			for (int x = 1; x <= 3; ++x) {
+				for (int y = 1; y <= 3; ++y) {
+					std::tuple<int, int, int> coord(x, y, 1);
+					GroupNode* node = rubikParts[coord];
+					temp[coord] = node;
+				}
+			}
+			rubikParts.at(std::make_tuple(1, 1, 1)) = temp[std::make_tuple(3, 1, 1)];
+			rubikParts.at(std::make_tuple(2, 1, 1)) = temp[std::make_tuple(3, 2, 1)];
+			rubikParts.at(std::make_tuple(3, 1, 1)) = temp[std::make_tuple(3, 3, 1)];
+			rubikParts.at(std::make_tuple(1, 2, 1)) = temp[std::make_tuple(2, 1, 1)];
+			rubikParts.at(std::make_tuple(3, 2, 1)) = temp[std::make_tuple(2, 3, 1)];
+			rubikParts.at(std::make_tuple(1, 3, 1)) = temp[std::make_tuple(1, 1, 1)];
+			rubikParts.at(std::make_tuple(2, 3, 1)) = temp[std::make_tuple(1, 2, 1)];
+			rubikParts.at(std::make_tuple(3, 3, 1)) = temp[std::make_tuple(1, 3, 1)];
+			break;
+		
+		case 3:
+			animationRotation = glm::vec3(-90.0f, 0.0f, 0.0f);
+			for (int y = 1; y <= 3; ++y) {
+				for (int z = 1; z <= 3; ++z) {
+					std::tuple<int, int, int> coord(3, y, z);
+					GroupNode* node = rubikParts[coord];
+					temp[coord] = node;
+				}
+			}
+			rubikParts.at(std::make_tuple(3, 1, 1)) = temp[std::make_tuple(3, 1, 3)];
+			rubikParts.at(std::make_tuple(3, 1, 2)) = temp[std::make_tuple(3, 2, 3)];
+			rubikParts.at(std::make_tuple(3, 1, 3)) = temp[std::make_tuple(3, 3, 3)];
+			rubikParts.at(std::make_tuple(3, 2, 1)) = temp[std::make_tuple(3, 1, 2)];
+			rubikParts.at(std::make_tuple(3, 2, 3)) = temp[std::make_tuple(3, 3, 2)];
+			rubikParts.at(std::make_tuple(3, 3, 1)) = temp[std::make_tuple(3, 1, 1)];
+			rubikParts.at(std::make_tuple(3, 3, 2)) = temp[std::make_tuple(3, 2, 1)];
+			rubikParts.at(std::make_tuple(3, 3, 3)) = temp[std::make_tuple(3, 3, 1)];
+			break;
+		
+		case 4:
+			animationRotation = glm::vec3(0.0f, 90.0f, 0.0f);
+			for (int x = 1; x <= 3; ++x) {
+				for (int z = 1; z <= 3; ++z) {
+					std::tuple<int, int, int> coord(x, 1, z);
+					GroupNode* node = rubikParts[coord];
+					temp[coord] = node;
+				}
+			}
+			rubikParts.at(std::make_tuple(1, 1, 1)) = temp[std::make_tuple(1, 1, 3)];
+			rubikParts.at(std::make_tuple(1, 1, 2)) = temp[std::make_tuple(2, 1, 3)];
+			rubikParts.at(std::make_tuple(1, 1, 3)) = temp[std::make_tuple(3, 1, 3)];
+			rubikParts.at(std::make_tuple(2, 1, 1)) = temp[std::make_tuple(1, 1, 2)];
+			rubikParts.at(std::make_tuple(2, 1, 3)) = temp[std::make_tuple(3, 1, 2)];
+			rubikParts.at(std::make_tuple(3, 1, 1)) = temp[std::make_tuple(1, 1, 1)];
+			rubikParts.at(std::make_tuple(3, 1, 2)) = temp[std::make_tuple(2, 1, 1)];
+			rubikParts.at(std::make_tuple(3, 1, 3)) = temp[std::make_tuple(3, 1, 1)];
+			break;
+		
+		case 5:
+			animationRotation = glm::vec3(90.0f, 0.0f, 0.0f);
+			for (int y = 1; y <= 3; ++y) {
+				for (int z = 1; z <= 3; ++z) {
+					std::tuple<int, int, int> coord(1, y, z);
+					GroupNode* node = rubikParts[coord];
+					temp[coord] = node;
+				}
+			}
+			rubikParts.at(std::make_tuple(1, 1, 1)) = temp[std::make_tuple(1, 3, 1)];
+			rubikParts.at(std::make_tuple(1, 1, 2)) = temp[std::make_tuple(1, 2, 1)];
+			rubikParts.at(std::make_tuple(1, 1, 3)) = temp[std::make_tuple(1, 1, 1)];
+			rubikParts.at(std::make_tuple(1, 2, 1)) = temp[std::make_tuple(1, 3, 2)];
+			rubikParts.at(std::make_tuple(1, 2, 3)) = temp[std::make_tuple(1, 1, 2)];
+			rubikParts.at(std::make_tuple(1, 3, 1)) = temp[std::make_tuple(1, 3, 3)];
+			rubikParts.at(std::make_tuple(1, 3, 2)) = temp[std::make_tuple(1, 2, 3)];
+			rubikParts.at(std::make_tuple(1, 3, 3)) = temp[std::make_tuple(1, 1, 3)];
+			break;
+
+		case 6:
+			animationRotation = glm::vec3(0.0f, 0.0f, 90.0f);
+			for (int x = 1; x <= 3; ++x) {
+				for (int y = 1; y <= 3; ++y) {
+					std::tuple<int, int, int> coord(x, y, 3);
+					GroupNode* node = rubikParts[coord];
+					temp[coord] = node;
+				}
+			}
+			rubikParts.at(std::make_tuple(1, 1, 3)) = temp[std::make_tuple(1, 3, 3)];
+			rubikParts.at(std::make_tuple(2, 1, 3)) = temp[std::make_tuple(1, 2, 3)];
+			rubikParts.at(std::make_tuple(3, 1, 3)) = temp[std::make_tuple(1, 1, 3)];
+			rubikParts.at(std::make_tuple(1, 2, 3)) = temp[std::make_tuple(2, 3, 3)];
+			rubikParts.at(std::make_tuple(3, 2, 3)) = temp[std::make_tuple(2, 1, 3)];
+			rubikParts.at(std::make_tuple(1, 3, 3)) = temp[std::make_tuple(3, 3, 3)];
+			rubikParts.at(std::make_tuple(2, 3, 3)) = temp[std::make_tuple(3, 2, 3)];
+			rubikParts.at(std::make_tuple(3, 3, 3)) = temp[std::make_tuple(3, 1, 3)];
+			break;
+
+		};
+
+
+	}
+}
+
+
+void RubikCube::rotateFaceCCW() {
+	if (!animated) {//only do the setup when called without any animation in progress
+		animated = true;
+		SoundEngine->play2D("audio/turn.mp3");
+
+		std::map<std::tuple<int, int, int>, GroupNode*> temp;
+		switch (selectedFace) {
+		case 1:
+			animationRotation = glm::vec3(0.0f, 90.0f, 0.0f);
+			for (int x = 1; x <= 3; ++x) {
+				for (int z = 1; z <= 3; ++z) {
+					std::tuple<int, int, int> coord(x, 3, z);
+					GroupNode* node = rubikParts[coord];
+					temp[coord] = node;
+				}
+			}
+			rubikParts.at(std::make_tuple(1, 3, 1)) = temp[std::make_tuple(1, 3, 3)];
+			rubikParts.at(std::make_tuple(1, 3, 2)) = temp[std::make_tuple(2, 3, 3)];
+			rubikParts.at(std::make_tuple(1, 3, 3)) = temp[std::make_tuple(3, 3, 3)];
+			rubikParts.at(std::make_tuple(2, 3, 1)) = temp[std::make_tuple(1, 3, 2)];
+			rubikParts.at(std::make_tuple(2, 3, 3)) = temp[std::make_tuple(3, 3, 2)];
+			rubikParts.at(std::make_tuple(3, 3, 1)) = temp[std::make_tuple(1, 3, 1)];
+			rubikParts.at(std::make_tuple(3, 3, 2)) = temp[std::make_tuple(2, 3, 1)];
+			rubikParts.at(std::make_tuple(3, 3, 3)) = temp[std::make_tuple(3, 3, 1)];
+			break;
+
+		case 2:
+			animationRotation = glm::vec3(0.0f, 0.0f, 90.0f);
+			for (int x = 1; x <= 3; ++x) {
+				for (int y = 1; y <= 3; ++y) {
+					std::tuple<int, int, int> coord(x, y, 1);
+					GroupNode* node = rubikParts[coord];
+					temp[coord] = node;
+				}
+			}
+			rubikParts.at(std::make_tuple(1, 1, 1)) = temp[std::make_tuple(1, 3, 1)];
+			rubikParts.at(std::make_tuple(2, 1, 1)) = temp[std::make_tuple(1, 2, 1)];
+			rubikParts.at(std::make_tuple(3, 1, 1)) = temp[std::make_tuple(1, 1, 1)];
+			rubikParts.at(std::make_tuple(1, 2, 1)) = temp[std::make_tuple(2, 3, 1)];
+			rubikParts.at(std::make_tuple(3, 2, 1)) = temp[std::make_tuple(2, 1, 1)];
+			rubikParts.at(std::make_tuple(1, 3, 1)) = temp[std::make_tuple(3, 3, 1)];
+			rubikParts.at(std::make_tuple(2, 3, 1)) = temp[std::make_tuple(3, 2, 1)];
+			rubikParts.at(std::make_tuple(3, 3, 1)) = temp[std::make_tuple(3, 1, 1)];
+			break;
+
+		case 3:
+			animationRotation = glm::vec3(90.0f, 0.0f, 0.0f);
+			for (int y = 1; y <= 3; ++y) {
+				for (int z = 1; z <= 3; ++z) {
+					std::tuple<int, int, int> coord(3, y, z);
+					GroupNode* node = rubikParts[coord];
+					temp[coord] = node;
+				}
+			}
+			rubikParts.at(std::make_tuple(3, 1, 1)) = temp[std::make_tuple(3, 3, 1)];
+			rubikParts.at(std::make_tuple(3, 1, 2)) = temp[std::make_tuple(3, 2, 1)];
+			rubikParts.at(std::make_tuple(3, 1, 3)) = temp[std::make_tuple(3, 1, 1)];
+			rubikParts.at(std::make_tuple(3, 2, 1)) = temp[std::make_tuple(3, 3, 2)];
+			rubikParts.at(std::make_tuple(3, 2, 3)) = temp[std::make_tuple(3, 1, 2)];
+			rubikParts.at(std::make_tuple(3, 3, 1)) = temp[std::make_tuple(3, 3, 3)];
+			rubikParts.at(std::make_tuple(3, 3, 2)) = temp[std::make_tuple(3, 2, 3)];
+			rubikParts.at(std::make_tuple(3, 3, 3)) = temp[std::make_tuple(3, 1, 3)];
+			break;
+
+		case 4:
+			animationRotation = glm::vec3(0.0f, -90.0f, 0.0f);
+			for (int x = 1; x <= 3; ++x) {
+				for (int z = 1; z <= 3; ++z) {
+					std::tuple<int, int, int> coord(x, 1, z);
+					GroupNode* node = rubikParts[coord];
+					temp[coord] = node;
+				}
+			}
+			rubikParts.at(std::make_tuple(1, 1, 1)) = temp[std::make_tuple(3, 1, 1)];
+			rubikParts.at(std::make_tuple(1, 1, 2)) = temp[std::make_tuple(2, 1, 1)];
+			rubikParts.at(std::make_tuple(1, 1, 3)) = temp[std::make_tuple(1, 1, 1)];
+			rubikParts.at(std::make_tuple(2, 1, 1)) = temp[std::make_tuple(3, 1, 2)];
+			rubikParts.at(std::make_tuple(2, 1, 3)) = temp[std::make_tuple(1, 1, 2)];
+			rubikParts.at(std::make_tuple(3, 1, 1)) = temp[std::make_tuple(3, 1, 3)];
+			rubikParts.at(std::make_tuple(3, 1, 2)) = temp[std::make_tuple(2, 1, 3)];
+			rubikParts.at(std::make_tuple(3, 1, 3)) = temp[std::make_tuple(1, 1, 3)];
+			break;
+
+		case 5:
+			animationRotation = glm::vec3(-90.0f, 0.0f, 0.0f);
+			for (int y = 1; y <= 3; ++y) {
+				for (int z = 1; z <= 3; ++z) {
+					std::tuple<int, int, int> coord(1, y, z);
+					GroupNode* node = rubikParts[coord];
+					temp[coord] = node;
+				}
+			}
+			rubikParts.at(std::make_tuple(1, 1, 1)) = temp[std::make_tuple(1, 1, 3)];
+			rubikParts.at(std::make_tuple(1, 1, 2)) = temp[std::make_tuple(1, 2, 3)];
+			rubikParts.at(std::make_tuple(1, 1, 3)) = temp[std::make_tuple(1, 3, 3)];
+			rubikParts.at(std::make_tuple(1, 2, 1)) = temp[std::make_tuple(1, 1, 2)];
+			rubikParts.at(std::make_tuple(1, 2, 3)) = temp[std::make_tuple(1, 3, 2)];
+			rubikParts.at(std::make_tuple(1, 3, 1)) = temp[std::make_tuple(1, 1, 1)];
+			rubikParts.at(std::make_tuple(1, 3, 2)) = temp[std::make_tuple(1, 2, 1)];
+			rubikParts.at(std::make_tuple(1, 3, 3)) = temp[std::make_tuple(1, 3, 1)];
+			break;
+
+		case 6:
+			animationRotation = glm::vec3(0.0f, 0.0f, -90.0f);
+			for (int x = 1; x <= 3; ++x) {
+				for (int y = 1; y <= 3; ++y) {
+					std::tuple<int, int, int> coord(x, y, 3);
+					GroupNode* node = rubikParts[coord];
+					temp[coord] = node;
+				}
+			}
+			rubikParts.at(std::make_tuple(1, 1, 3)) = temp[std::make_tuple(3, 1, 3)];
+			rubikParts.at(std::make_tuple(2, 1, 3)) = temp[std::make_tuple(3, 2, 3)];
+			rubikParts.at(std::make_tuple(3, 1, 3)) = temp[std::make_tuple(3, 3, 3)];
+			rubikParts.at(std::make_tuple(1, 2, 3)) = temp[std::make_tuple(2, 1, 3)];
+			rubikParts.at(std::make_tuple(3, 2, 3)) = temp[std::make_tuple(2, 3, 3)];
+			rubikParts.at(std::make_tuple(1, 3, 3)) = temp[std::make_tuple(1, 1, 3)];
+			rubikParts.at(std::make_tuple(2, 3, 3)) = temp[std::make_tuple(1, 2, 3)];
+			rubikParts.at(std::make_tuple(3, 3, 3)) = temp[std::make_tuple(1, 3, 3)];
+			break;
+
+		};
+
+
+	}
+}
 
 /*
 	Handles animation by updating the animationNodes using the animationRotation
