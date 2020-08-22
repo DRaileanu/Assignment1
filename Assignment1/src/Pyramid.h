@@ -1,6 +1,8 @@
 #pragma once
 #include "Drawable.h"
 
+//creates Pyramid Drawable
+
 class Pyramid : public Drawable {
 public:
 	Pyramid() {

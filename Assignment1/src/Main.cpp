@@ -260,14 +260,10 @@ int main() {
     renderer->setShadowCasterLight(light);
     //root of the Scene
     renderer->setRootSceneNode(root);
-    //default selected node to transform
-    
-
+    //default selected Rubik Cube
     RubikCube* selectedRubikCube = rubikCube1;
-    SceneNode* selectedNode = rubikCube1;
 
 
-    
     //start music
     SoundEngine->play2D("audio/gameSong.mp3", true);
     //------------------------------------------------------------------------------
@@ -312,7 +308,6 @@ int main() {
                     root->removeChild(selectedRubikCube);
                     root->addChild(rubikCube1);
                     selectedRubikCube = rubikCube1;
-                    selectedNode = selectedRubikCube;
                     keyPress = true;
                 }
             }
@@ -328,7 +323,6 @@ int main() {
                     root->removeChild(selectedRubikCube);
                     root->addChild(rubikCube2);
                     selectedRubikCube = rubikCube2;
-                    selectedNode = selectedRubikCube;
                     keyPress = true;
                 }
             }
@@ -344,7 +338,6 @@ int main() {
                     root->removeChild(selectedRubikCube);
                     root->addChild(rubikCube3);
                     selectedRubikCube = rubikCube3;
-                    selectedNode = selectedRubikCube;
                     keyPress = true;
                 }
             }
@@ -360,7 +353,6 @@ int main() {
                     root->removeChild(selectedRubikCube);
                     root->addChild(rubikCube4);
                     selectedRubikCube = rubikCube4;
-                    selectedNode = selectedRubikCube;
                     keyPress = true;
                 }
             }
@@ -446,37 +438,33 @@ int main() {
         }
  
 
+        
+        // move light source
         //strafe left continously (-x direction)
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_RELEASE) {
-            selectedNode->strafeLeft(25 * dt);
+            lightNode->strafeLeft(25 * dt);
         }
-        
-
         //strafe right continously (+x direction)
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_RELEASE) {
-            selectedNode->strafeRight(25 * dt);
-        }
-        
+            lightNode->strafeRight(25 * dt);
+        }     
         //move forward continously (-z direction)
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE && glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_RELEASE) {
-            selectedNode->moveForward(25 * dt);
-        }
-        
+            lightNode->moveForward(25 * dt);
+        }     
         //move backwards continously (+z direction)
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE && glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_RELEASE) {
-            selectedNode->moveBackwards(25 * dt);
-        } 
-        
+            lightNode->moveBackwards(25 * dt);
+        }       
         //move up continously (+y direction)
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_RELEASE) {
-            selectedNode->moveUp(25 * dt);
+            lightNode->moveUp(25 * dt);
         }
         //move down continously (-y direction)
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_RELEASE) {
-            selectedNode->moveDown(25 * dt);
+            lightNode->moveDown(25 * dt);
         }
-
-
+        
 
         // change rendering modes
         if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) {

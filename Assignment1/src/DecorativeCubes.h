@@ -5,9 +5,11 @@
 #include "Random.h"
 #include <vector>
 
+//class creates, updates and moves around many small cubes to act as decoration. It's hard coded to work on a 100x100 grid and move the mini-cubes a distance of 1 before having the options to turn. If reach edge of grid, it reverses direction
+
 
 class DecorativeCubes : public Drawable {
-	static const unsigned int MAX_CUBES = 50000;
+	static const unsigned int MAX_CUBES = 5000;
 	struct DecorativeCube {
 		DecorativeCube() {
 			int xPos = RandRange(-48, 48);
